@@ -19,7 +19,7 @@ export default function Compras() {
   const [categoriaNombre, setCategoriaNombre] = useState("");
   const [medida, setMedida] = useState("");
   
-  // Proveedor
+  // Proveedor (Campos restaurados)
   const [proveedorNombre, setProveedorNombre] = useState("");
   const [proveedorTelefono, setProveedorTelefono] = useState("");
   const [proveedorDireccion, setProveedorDireccion] = useState("");
@@ -39,7 +39,7 @@ export default function Compras() {
   const [fechaFin, setFechaFin] = useState("");
   const [loading, setLoading] = useState(false);
   
-  // NUEVO: Estado para el selector de meses
+  // Selector de meses
   const [mesSeleccionado, setMesSeleccionado] = useState("");
 
   const formatearMoneda = (valor) => {
@@ -81,24 +81,19 @@ export default function Compras() {
     }
   };
 
-  // --- NUEVO: Lógica del Filtro de Meses ---
+  // Lógica del Filtro de Meses
   const handleMesChange = (e) => {
     const mes = e.target.value;
     setMesSeleccionado(mes);
 
     if (mes === "") {
-        // Si elige "Todos los meses", limpiamos las fechas
         setFechaInicio("");
         setFechaFin("");
     } else {
         const yearActual = new Date().getFullYear();
         const mesIndex = parseInt(mes);
-        
-        // Primer día del mes (Formato YYYY-MM-DD)
         const primerDia = new Date(yearActual, mesIndex, 1);
         const fechaInicioStr = primerDia.toISOString().split('T')[0];
-
-        // Último día del mes
         const ultimoDia = new Date(yearActual, mesIndex + 1, 0);
         const fechaFinStr = ultimoDia.toISOString().split('T')[0];
 
@@ -107,7 +102,6 @@ export default function Compras() {
     }
   };
 
-  // Validación Formulario
   const validateForm = () => {
     const newErrors = {};
     if (!nombre.trim()) newErrors.nombre = "El nombre es obligatorio.";
@@ -171,7 +165,18 @@ export default function Compras() {
     setCategoriaNombre(compra.categoriaNombre);
     setProveedorNombre(compra.proveedorNombre || "");
     setMedida(compra.medida || "");
-    setProveedorTelefono(""); setProveedorDireccion(""); setMostrarDetallesProveedor(false);
+    
+    // Si tiene teléfono o dirección, mostramos los detalles automáticamente
+    if (compra.proveedorTelefono || compra.proveedorDireccion) {
+        setProveedorTelefono(compra.proveedorTelefono || "");
+        setProveedorDireccion(compra.proveedorDireccion || "");
+        setMostrarDetallesProveedor(true);
+    } else {
+        setProveedorTelefono("");
+        setProveedorDireccion("");
+        setMostrarDetallesProveedor(false);
+    }
+    
     setErrors({});
     setMostrarFormulario(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -214,19 +219,37 @@ export default function Compras() {
           {/* FORMULARIO */}
           {mostrarFormulario && (
             <form onSubmit={handleSubmit} className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6 space-y-4 shadow-sm animate-fade-in-down">
-                {/* ... (El formulario se mantiene igual, lo omito por brevedad pero pégalo aquí completo) ... */}
-                {/* Pega aquí el contenido de tu formulario original, es idéntico */}
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {/* Campos Básicos */}
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Nombre del Material <span className="text-red-500">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-600 mt-1">{errors.nombre}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Categoría <span className="text-red-500">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-600 mt-1">{errors.categoriaNombre}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Cantidad <span className="text-red-500">*</span></label><input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} className={inputClass(errors.cantidad)} />{errors.cantidad && <p className="text-xs text-red-600 mt-1">{errors.cantidad}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Precio Unitario <span className="text-red-500">*</span></label><input type="number" step="0.01" value={precioUnitario} onChange={(e) => setPrecioUnitario(e.target.value)} className={inputClass(errors.precioUnitario)} />{errors.precioUnitario && <p className="text-xs text-red-600 mt-1">{errors.precioUnitario}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Fecha de Compra <span className="text-red-500">*</span></label><input type="date" value={fechaCompra} onChange={(e) => setFechaCompra(e.target.value)} className={inputClass(errors.fechaCompra)} />{errors.fechaCompra && <p className="text-xs text-red-600 mt-1">{errors.fechaCompra}</p>}</div>
-                    <div><label className="block text-sm font-medium text-gray-900 mb-2">Medida (Opcional)</label><input type="text" value={medida} onChange={(e) => setMedida(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                    <div><label className="block text-sm font-medium text-gray-900 mb-2">Medida (Opcional)</label><input type="text" value={medida} onChange={(e) => setMedida(e.target.value)} placeholder="Ej: kg, m, bolsas" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                    
+                    {/* Sección Proveedor Restaurada */}
                     <div className="sm:col-span-2 border-t pt-4 mt-2">
                         <h4 className="text-sm font-semibold text-gray-700 mb-3">Información del Proveedor</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="sm:col-span-2"><label className="block text-sm font-medium text-gray-900 mb-2">Nombre del Proveedor</label><input type="text" value={proveedorNombre} onChange={(e) => setProveedorNombre(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                            <div className="sm:col-span-2">
+                                <label className="block text-sm font-medium text-gray-900 mb-2">Nombre del Proveedor</label>
+                                <input type="text" value={proveedorNombre} onChange={(e) => setProveedorNombre(e.target.value)} placeholder="Ej: Ferretería Central" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <button type="button" onClick={() => setMostrarDetallesProveedor(!mostrarDetallesProveedor)} className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-base">{mostrarDetallesProveedor ? "expand_less" : "expand_more"}</span>
+                                    {mostrarDetallesProveedor ? "Ocultar detalles contacto" : "Añadir contacto del proveedor"}
+                                </button>
+                            </div>
+
+                            {mostrarDetallesProveedor && (
+                                <>
+                                    <div className="animate-fade-in-down"><label className="block text-sm font-medium text-gray-900 mb-2">Teléfono</label><input type="text" value={proveedorTelefono} onChange={(e) => setProveedorTelefono(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500" /></div>
+                                    <div className="animate-fade-in-down"><label className="block text-sm font-medium text-gray-900 mb-2">Dirección</label><input type="text" value={proveedorDireccion} onChange={(e) => setProveedorDireccion(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500" /></div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -239,10 +262,10 @@ export default function Compras() {
 
           <ComprasSummaryCards total={resumenDatos.total} promedioPorCompra={resumenDatos.promedioPorCompra} ultimaCompra={resumenDatos.ultimaCompra} />
           
-          {/* BARRA DE FILTROS REDISEÑADA */}
+          {/* BARRA DE FILTROS */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-end">
             
-            {/* 1. FILTRO RÁPIDO POR MESES (Nuevo) */}
+            {/* 1. FILTRO RÁPIDO POR MESES */}
             <div className="w-full md:w-48">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1 block">Filtrar por Mes</label>
                 <select 
@@ -266,11 +289,11 @@ export default function Compras() {
                 </select>
             </div>
 
-            {/* 2. FECHAS MANUALES (Se rellenan solas o manualmente) */}
+            {/* 2. FECHAS MANUALES */}
             <div className="w-full md:flex-1 grid grid-cols-2 gap-3">
                 <div>
                     <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Desde</label>
-                    <input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-1 text-sm text-gray-600" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); /* Si toca fecha manual, resetea el mes */ }} />
+                    <input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-1 text-sm text-gray-600" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} />
                 </div>
                 <div>
                     <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Hasta</label>
