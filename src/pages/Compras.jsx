@@ -19,7 +19,7 @@ export default function Compras() {
   const [categoriaNombre, setCategoriaNombre] = useState("");
   const [medida, setMedida] = useState("");
   
-  // Proveedor (Campos restaurados)
+  // Proveedor
   const [proveedorNombre, setProveedorNombre] = useState("");
   const [proveedorTelefono, setProveedorTelefono] = useState("");
   const [proveedorDireccion, setProveedorDireccion] = useState("");
@@ -29,7 +29,13 @@ export default function Compras() {
 
   // Datos
   const [compras, setCompras] = useState([]);
-  const [resumenDatos, setResumenDatos] = useState({ total: "0.00", promedioPorCompra: "0.00", ultimaCompra: "0.00" });
+  const [resumenDatos, setResumenDatos] = useState({ 
+    total: "0.00", 
+    promedioPorCompra: "0.00", 
+    ultimaCompraMonto: "0.00",
+    ultimaCompraFecha: "--" 
+  });
+  
   const [paginaActual, setPaginaActual] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -47,18 +53,33 @@ export default function Compras() {
     return Number(valor).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  const formatearFechaCorta = (fecha) => {
+    if (!fecha) return "--";
+    return new Date(fecha).toLocaleDateString("es-ES", { day: 'numeric', month: 'short' });
+  };
+
   const calcularResumenTotal = async () => {
     try {
+      // Obtenemos todas las compras para el cálculo global
       const allCompras = await getAllCompras();
+      
       if (allCompras.length === 0) {
-        setResumenDatos({ total: "0.00", promedioPorCompra: "0.00", ultimaCompra: "0.00" });
+        setResumenDatos({ total: "0.00", promedioPorCompra: "0.00", ultimaCompraMonto: "0.00", ultimaCompraFecha: "--" });
         return;
       }
+
+      // 1. Total Gasto
       const total = allCompras.reduce((sum, compra) => sum + (compra.montoTotal || 0), 0);
+      
+      // 2. Ordenar por fecha REAL descendente para encontrar la última compra verdadera
+      const comprasOrdenadas = [...allCompras].sort((a, b) => new Date(b.fechaCompra) - new Date(a.fechaCompra));
+      const ultima = comprasOrdenadas[0];
+
       setResumenDatos({
         total: formatearMoneda(total),
         promedioPorCompra: formatearMoneda(total / allCompras.length),
-        ultimaCompra: formatearMoneda(allCompras[0]?.montoTotal || 0),
+        ultimaCompraMonto: formatearMoneda(ultima?.montoTotal || 0),
+        ultimaCompraFecha: formatearFechaCorta(ultima?.fechaCompra),
       });
     } catch (error) {
       console.error(error);
@@ -81,7 +102,6 @@ export default function Compras() {
     }
   };
 
-  // Lógica del Filtro de Meses
   const handleMesChange = (e) => {
     const mes = e.target.value;
     setMesSeleccionado(mes);
@@ -166,7 +186,6 @@ export default function Compras() {
     setProveedorNombre(compra.proveedorNombre || "");
     setMedida(compra.medida || "");
     
-    // Si tiene teléfono o dirección, mostramos los detalles automáticamente
     if (compra.proveedorTelefono || compra.proveedorDireccion) {
         setProveedorTelefono(compra.proveedorTelefono || "");
         setProveedorDireccion(compra.proveedorDireccion || "");
@@ -220,7 +239,6 @@ export default function Compras() {
           {mostrarFormulario && (
             <form onSubmit={handleSubmit} className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6 space-y-4 shadow-sm animate-fade-in-down">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    {/* Campos Básicos */}
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Nombre del Material <span className="text-red-500">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej.Cemento" className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-600 mt-1">{errors.nombre}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Categoría <span className="text-red-500">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} placeholder="Ej.Construccion, Fontaneria, Extras" className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-600 mt-1">{errors.categoriaNombre}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Cantidad <span className="text-red-500">*</span></label><input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} placeholder="Ej.10" className={inputClass(errors.cantidad)} />{errors.cantidad && <p className="text-xs text-red-600 mt-1">{errors.cantidad}</p>}</div>
@@ -228,7 +246,6 @@ export default function Compras() {
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Fecha de Compra <span className="text-red-500">*</span></label><input type="date" value={fechaCompra} onChange={(e) => setFechaCompra(e.target.value)} className={inputClass(errors.fechaCompra)} />{errors.fechaCompra && <p className="text-xs text-red-600 mt-1">{errors.fechaCompra}</p>}</div>
                     <div><label className="block text-sm font-medium text-gray-900 mb-2">Medida (Opcional)</label><input type="text" value={medida} onChange={(e) => setMedida(e.target.value)} placeholder="Ej: kg, m, bolsas" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
                     
-                    {/* Sección Proveedor Restaurada */}
                     <div className="sm:col-span-2 border-t pt-4 mt-2">
                         <h4 className="text-sm font-semibold text-gray-700 mb-3">Información del Proveedor</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -236,14 +253,12 @@ export default function Compras() {
                                 <label className="block text-sm font-medium text-gray-900 mb-2">Nombre del Proveedor</label>
                                 <input type="text" value={proveedorNombre} onChange={(e) => setProveedorNombre(e.target.value)} placeholder="Ej: Ferretería Central" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             </div>
-
                             <div className="sm:col-span-2">
                                 <button type="button" onClick={() => setMostrarDetallesProveedor(!mostrarDetallesProveedor)} className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
                                     <span className="material-symbols-outlined text-base">{mostrarDetallesProveedor ? "expand_less" : "expand_more"}</span>
                                     {mostrarDetallesProveedor ? "Ocultar detalles contacto" : "Añadir contacto del proveedor"}
                                 </button>
                             </div>
-
                             {mostrarDetallesProveedor && (
                                 <>
                                     <div className="animate-fade-in-down"><label className="block text-sm font-medium text-gray-900 mb-2">Teléfono</label><input type="text" value={proveedorTelefono} onChange={(e) => setProveedorTelefono(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500" /></div>
@@ -260,19 +275,19 @@ export default function Compras() {
             </form>
           )}
 
-          <ComprasSummaryCards total={resumenDatos.total} promedioPorCompra={resumenDatos.promedioPorCompra} ultimaCompra={resumenDatos.ultimaCompra} />
+          {/* TARJETAS DE RESUMEN ACTUALIZADAS */}
+          <ComprasSummaryCards 
+            total={resumenDatos.total} 
+            promedioPorCompra={resumenDatos.promedioPorCompra} 
+            ultimaCompraMonto={resumenDatos.ultimaCompraMonto} 
+            ultimaCompraFecha={resumenDatos.ultimaCompraFecha} // Pasamos la fecha
+          />
           
           {/* BARRA DE FILTROS */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-end">
-            
-            {/* 1. FILTRO RÁPIDO POR MESES */}
             <div className="w-full md:w-48">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1 block">Filtrar por Mes</label>
-                <select 
-                    value={mesSeleccionado} 
-                    onChange={handleMesChange}
-                    className="block w-full h-10 px-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-gray-50 font-medium text-gray-700"
-                >
+                <select value={mesSeleccionado} onChange={handleMesChange} className="block w-full h-10 px-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-gray-50 font-medium text-gray-700">
                     <option value="">Todos los meses</option>
                     <option value="0">Enero</option>
                     <option value="1">Febrero</option>
@@ -288,23 +303,11 @@ export default function Compras() {
                     <option value="11">Diciembre</option>
                 </select>
             </div>
-
-            {/* 2. FECHAS MANUALES */}
             <div className="w-full md:flex-1 grid grid-cols-2 gap-3">
-                <div>
-                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Desde</label>
-                    <input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-1 text-sm text-gray-600" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} />
-                </div>
-                <div>
-                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Hasta</label>
-                    <input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-1 text-sm text-gray-600" value={fechaFin} onChange={(e) => {setFechaFin(e.target.value); setMesSeleccionado("");}} />
-                </div>
+                <div><label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Desde</label><input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-1 text-sm text-gray-600" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} /></div>
+                <div><label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Hasta</label><input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-1 text-sm text-gray-600" value={fechaFin} onChange={(e) => {setFechaFin(e.target.value); setMesSeleccionado("");}} /></div>
             </div>
-
-            {/* 3. BOTÓN APLICAR */}
-            <button onClick={() => {setPaginaActual(1); cargarCompras(1);}} disabled={loading} className="w-full md:w-auto h-10 px-6 rounded-lg bg-gray-900 text-white font-medium hover:bg-black transition-colors disabled:opacity-50 shadow-sm">
-                Aplicar Filtros
-            </button>
+            <button onClick={() => {setPaginaActual(1); cargarCompras(1);}} disabled={loading} className="w-full md:w-auto h-10 px-6 rounded-lg bg-gray-900 text-white font-medium hover:bg-black transition-colors disabled:opacity-50 shadow-sm">Aplicar Filtros</button>
           </div>
 
           {loading ? <div className="text-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div></div> : <ComprasTable compras={compras} paginaActual={paginaActual} totalPaginas={totalPaginas} totalItems={totalItems} onChangePagina={(p) => { if(p>=1 && p<=totalPaginas) cargarCompras(p)}} onDelete={handleEliminar} onEdit={handleEditar} pageSize={pageSize} />}

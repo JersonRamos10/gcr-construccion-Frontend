@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"; // 1. IMPORTAR useRef
+import { useState, useEffect, useRef } from "react";
 import MainLayout from "../layouts/MainLayout";
 import SummaryCards from "../components/SummaryCards";
 import IncomeTable from "../components/IncomeTable";
@@ -7,9 +7,7 @@ import { showAlert } from "../utils/alerts";
 
 export default function Ingresos() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  
-  // Referencia para el scroll
-  const tablaRef = useRef(null); // 2. CREAR REFERENCIA
+  const tablaRef = useRef(null);
 
   // Estados del formulario
   const [descripcion, setDescripcion] = useState("");
@@ -21,8 +19,8 @@ export default function Ingresos() {
   // Datos
   const [ingresos, setIngresos] = useState([]);
   const [resumenDatos, setResumenDatos] = useState({
-    totalMes: 0,
-    promedioPorProyecto: 0,
+    totalMes: "0.00", // Ahora será string formateado
+    promedioPorProyecto: "0.00",
     ultimoIngreso: "--",
   });
 
@@ -34,52 +32,68 @@ export default function Ingresos() {
   const [fechaFin, setFechaFin] = useState("");
   const pageSize = 5;
 
-  const calcularResumen = (ingresosList) => {
-    if (!ingresosList || ingresosList.length === 0) {
-      setResumenDatos({ totalMes: 0, promedioPorProyecto: 0, ultimoIngreso: "--" });
-      return;
-    }
-    const total = ingresosList.reduce((sum, ing) => sum + (ing.monto || 0), 0);
-    const promedio = ingresosList.length > 0 ? total / ingresosList.length : 0;
-    
-    // Ordenamos para encontrar la fecha más reciente real, por si la API no lo hace
-    const ingresosOrdenados = [...ingresosList].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-    const ultimoIngreso = ingresosOrdenados[0];
-    const ultimaFecha = ultimoIngreso ? new Date(ultimoIngreso.fecha).toLocaleDateString("es-ES") : "--";
+  // --- CALCULAR RESUMEN DEL MES ACTUAL (INDEPENDIENTE) ---
+  const calcularResumenMesActual = async () => {
+    try {
+        const now = new Date();
+        // Primer día del mes actual
+        const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+        // Último día del mes actual
+        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
 
-    setResumenDatos({
-      totalMes: total.toFixed(2),
-      promedioPorProyecto: promedio.toFixed(2), // Aquí podrías cambiar la etiqueta visual en el componente SummaryCards
-      ultimoIngreso: ultimaFecha,
-    });
+        // Pedimos TODOS los datos de este mes (usando un pageSize alto para traer todo)
+        // NOTA: Si tienes muchos registros, esto debería paginarse en el back, pero para <100 funciona.
+        const dataMes = await getIngresos(1, 1000, start, end);
+        
+        const itemsMes = dataMes.items || [];
+        
+        // Sumamos solo lo de este mes
+        const total = itemsMes.reduce((sum, ing) => sum + (ing.monto || 0), 0);
+        
+        // Calculamos el promedio global (opcional: o solo del mes)
+        // Para promedio general, mejor usar la data actual o una llamada global si existiera.
+        // Aquí usaremos la data del mes para ser consistentes con "Promedio de este mes"
+        const promedio = itemsMes.length > 0 ? total / itemsMes.length : 0;
+
+        // Último ingreso real (ordenamos por fecha)
+        const ordenados = [...itemsMes].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        const ultimo = ordenados[0];
+        const fechaUltimo = ultimo ? new Date(ultimo.fecha).toLocaleDateString("es-ES") : "--";
+
+        setResumenDatos({
+            totalMes: total.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            promedioPorProyecto: promedio.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            ultimoIngreso: fechaUltimo
+        });
+
+    } catch (error) {
+        console.error("Error calculando resumen mensual:", error);
+    }
   };
 
-  const cargarIngresos = async (page = 1) => {
+  const cargarIngresosTabla = async (page = 1) => {
     try {
       const data = await getIngresos(page, pageSize, fechaInicio, fechaFin);
-      const ingresosList = data.items || [];
-      setIngresos(ingresosList);
+      setIngresos(data.items || []);
       setPaginaActual(data.page || 1);
       setTotalPaginas(data.totalPages || 1);
       setTotalItems(data.totalItems || 0);
-      calcularResumen(ingresosList);
     } catch (error) {
-      console.error("❌ Error cargando ingresos:", error);
+      console.error("❌ Error cargando tabla:", error);
       setIngresos([]);
     }
   };
 
-  // 3. NUEVA FUNCIÓN PARA APLICAR FILTRO CON SCROLL
   const handleAplicarFiltro = async () => {
-    await cargarIngresos(1);
-    // Hacemos scroll suave hacia la tabla
+    await cargarIngresosTabla(1);
     if (tablaRef.current) {
         tablaRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
   useEffect(() => {
-    cargarIngresos();
+    cargarIngresosTabla();
+    calcularResumenMesActual(); // Se ejecuta al inicio para llenar las tarjetas
   }, []);
 
   const validateForm = () => {
@@ -103,7 +117,11 @@ export default function Ingresos() {
       showAlert("success", "Ingreso registrado correctamente");
       setDescripcion(""); setMonto(""); setFecha(""); setErrors({});
       setMostrarFormulario(false);
-      await cargarIngresos(1);
+      
+      // Actualizamos todo
+      await cargarIngresosTabla(1);
+      await calcularResumenMesActual();
+      
     } catch (error) {
       const msg = error.response?.data?.message || error.message || "Error al registrar";
       showAlert("error", msg);
@@ -115,7 +133,8 @@ export default function Ingresos() {
   const handleEliminar = async (id) => {
     try {
       await deleteIngreso(id);
-      await cargarIngresos(paginaActual);
+      await cargarIngresosTabla(paginaActual);
+      await calcularResumenMesActual();
       showAlert("success", "Ingreso eliminado");
     } catch (error) {
       showAlert("error", "No se pudo eliminar el ingreso");
@@ -156,19 +175,17 @@ export default function Ingresos() {
               <label className="text-xs font-medium text-gray-600">Hasta</label>
               <input type="date" className="block w-full h-10 px-3 border border-gray-200 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
             </div>
-            {/* 4. ACTUALIZAR BOTÓN PARA USAR LA NUEVA FUNCIÓN */}
             <button onClick={handleAplicarFiltro} className="w-full sm:w-auto h-10 px-4 sm:px-6 rounded-lg bg-blue-600 hover:bg-blue-700 font-medium text-white text-sm sm:text-base transition-colors">Aplicar</button>
           </div>
 
           <SummaryCards 
-            totalMes={`$${Number(resumenDatos.totalMes).toLocaleString("es-ES")}`} 
-            promedioPorProyecto={`$${Number(resumenDatos.promedioPorProyecto).toLocaleString("es-ES")}`} 
+            totalMes={`$${resumenDatos.totalMes}`} 
+            promedioPorProyecto={`$${resumenDatos.promedioPorProyecto}`} 
             ultimoIngreso={resumenDatos.ultimoIngreso} 
           />
 
-          {/* 5. AGREGAR LA REF AL CONTENEDOR DE LA TABLA */}
           <div ref={tablaRef} className="scroll-mt-4">
-             <IncomeTable ingresos={ingresos} paginaActual={paginaActual} totalPaginas={totalPaginas} totalItems={totalItems} onChangePagina={(p) => { if(p>=1 && p<=totalPaginas) cargarIngresos(p)}} onDelete={handleEliminar} pageSize={pageSize} />
+             <IncomeTable ingresos={ingresos} paginaActual={paginaActual} totalPaginas={totalPaginas} totalItems={totalItems} onChangePagina={(p) => { if(p>=1 && p<=totalPaginas) cargarIngresosTabla(p)}} onDelete={handleEliminar} pageSize={pageSize} />
           </div>
         </div>
       </div>

@@ -1,7 +1,8 @@
 export default function ComprasSummaryCards({
   total,
   promedioPorCompra,
-  ultimaCompra,
+  ultimaCompraMonto, // Antes ultimaCompra
+  ultimaCompraFecha, // Nueva propiedad
 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
@@ -14,7 +15,7 @@ export default function ComprasSummaryCards({
         <h3 className="text-xl sm:text-2xl font-semibold text-red-600 mb-1">
           ${total}
         </h3>
-        <p className="text-xs text-gray-500">Gasto total</p>
+        <p className="text-xs text-gray-500">Gasto total acumulado</p>
       </div>
 
       {/* Promedio */}
@@ -26,7 +27,7 @@ export default function ComprasSummaryCards({
         <h3 className="text-xl sm:text-2xl font-semibold text-blue-600 mb-1">
           ${promedioPorCompra}
         </h3>
-        <p className="text-xs text-gray-500">Monto promedio</p>
+        <p className="text-xs text-gray-500">Valor medio</p>
       </div>
 
       {/* Última Compra */}
@@ -36,9 +37,12 @@ export default function ComprasSummaryCards({
           <span className="material-symbols-outlined text-lg sm:text-xl text-purple-600">shopping_cart</span>
         </div>
         <h3 className="text-xl sm:text-2xl font-semibold text-purple-600 mb-1">
-          ${ultimaCompra}
+          ${ultimaCompraMonto}
         </h3>
-        <p className="text-xs text-gray-500">Registro más reciente</p>
+        <p className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="material-symbols-outlined text-[14px]">event</span>
+            {ultimaCompraFecha}
+        </p>
       </div>
     </div>
   );
