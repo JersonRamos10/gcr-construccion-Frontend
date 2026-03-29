@@ -15,7 +15,7 @@ export default function ComprasSummaryCards({
           </div>
           <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Gastado</span>
         </div>
-        <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1">
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate">
           ${total}
         </h3>
         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Acumulado en compras</p>
@@ -29,7 +29,7 @@ export default function ComprasSummaryCards({
           </div>
           <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Ticket Promedio</span>
         </div>
-        <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1">
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate">
           ${promedioPorCompra}
         </h3>
         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Por transacción</p>
@@ -43,7 +43,7 @@ export default function ComprasSummaryCards({
           </div>
           <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Última Actividad</span>
         </div>
-        <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1">
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate">
           ${ultimaCompraMonto}
         </h3>
         <div className="flex items-center gap-1.5 mt-1">

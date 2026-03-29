@@ -10,7 +10,7 @@ export default function SummaryCards({ totalMes, promedioPorProyecto, ultimoIngr
           </div>
           <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total este mes</span>
         </div>
-        <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1">
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate">
           {totalMes}
         </h3>
         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Ingresos acumulados</p>
@@ -24,7 +24,7 @@ export default function SummaryCards({ totalMes, promedioPorProyecto, ultimoIngr
           </div>
           <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Promedio Ticket</span>
         </div>
-        <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1">
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate">
           {promedioPorProyecto}
         </h3>
         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Por ingreso registrado</p>

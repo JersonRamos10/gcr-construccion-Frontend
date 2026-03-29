@@ -24,12 +24,13 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600/60 dark:bg-black/70 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border dark:border-slate-700 w-96 shadow-lg rounded-md bg-white dark:bg-slate-900">
+    <div className="fixed inset-0 bg-gray-600/60 dark:bg-black/70 overflow-y-auto h-full w-full flex items-start justify-center p-4 pt-16">
+      <div className="relative w-full max-w-md shadow-lg rounded-xl bg-white dark:bg-slate-900 border dark:border-slate-700">
+        <div className="p-5 sm:p-6">
         <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-slate-100">Nuevo Pago</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
               Empleado ID
             </label>
             <input
@@ -37,11 +38,11 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
               name="empleadoId"
               value={formData.empleadoId}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
               Monto
             </label>
             <input
@@ -49,11 +50,11 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
               name="monto"
               value={formData.monto}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
               Fecha
             </label>
             <input
@@ -61,25 +62,26 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
               name="fecha"
               value={formData.fecha}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
             />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+              className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 font-semibold rounded-lg transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="flex-1 sm:flex-none px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
             >
               Guardar
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

@@ -61,12 +61,12 @@ export default function Dashboard() {
           </div>
           
           {/* Botones de Acción Rápida */}
-          <div className="flex flex-wrap gap-3">
-            <Link to="/compras" className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all font-medium shadow-sm">
+          <div className="flex flex-col xs:flex-row sm:flex-row flex-wrap gap-3">
+            <Link to="/compras" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 transition-all font-medium shadow-sm w-full sm:w-auto">
                 <span className="material-symbols-outlined text-blue-600">shopping_cart</span>
                 Nueva Compra
             </Link>
-            <Link to="/ingresos" className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium shadow-md shadow-green-200">
+            <Link to="/ingresos" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium shadow-md shadow-green-200 w-full sm:w-auto">
                 <span className="material-symbols-outlined">attach_money</span>
                 Nuevo Ingreso
             </Link>
@@ -107,7 +107,7 @@ export default function Dashboard() {
             <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <p className="text-blue-100 font-medium mb-1 text-sm sm:text-base opacity-90">Capital Disponible Actual</p>
-                    <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
                         ${formatearMoneda(resumen?.capitalDisponible || 0)}
                     </h2>
                 </div>
@@ -160,7 +160,7 @@ export default function Dashboard() {
                     </div>
                     <p className="text-sm font-semibold text-gray-500 dark:text-slate-400 uppercase">Total Ingresos</p>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalIngresos || 0)}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalIngresos || 0)}</p>
                 <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">+ Entradas registradas</p>
             </div>
 
@@ -172,7 +172,7 @@ export default function Dashboard() {
                     </div>
                     <p className="text-sm font-semibold text-gray-500 dark:text-slate-400 uppercase">Gasto Materiales</p>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalComprasMaterial || 0)}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalComprasMaterial || 0)}</p>
                 <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5 mt-3">
                     <div className="bg-red-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalComprasMaterial || 0) / totalGastos * 100) : 0}%` }}></div>
                 </div>
@@ -187,7 +187,7 @@ export default function Dashboard() {
                     </div>
                     <p className="text-sm font-semibold text-gray-500 dark:text-slate-400 uppercase">Mano de Obra</p>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalPagosEmpleados || 0)}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalPagosEmpleados || 0)}</p>
                  <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5 mt-3">
                     <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalPagosEmpleados || 0) / totalGastos * 100) : 0}%` }}></div>
                 </div>

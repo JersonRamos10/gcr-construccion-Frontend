@@ -253,12 +253,12 @@ export default function Compras() {
                   <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Material <span className="text-red-400">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Cemento Portland" className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.nombre}</p>}</div>
                   <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Categoría <span className="text-red-400">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} placeholder="Ej. Obra Gris" className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.categoriaNombre}</p>}</div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
                       <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Cantidad <span className="text-red-400">*</span></label><input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} placeholder="0" className={inputClass(errors.cantidad)} /></div>
                       <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Medida</label><input type="text" value={medida} onChange={(e) => setMedida(e.target.value)} placeholder="kg, m" className={inputClass(null)} /></div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
                       <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Precio Unit. <span className="text-red-400">*</span></label><input type="number" step="0.01" value={precioUnitario} onChange={(e) => setPrecioUnitario(e.target.value)} placeholder="0.00" className={inputClass(errors.precioUnitario)} /></div>
                       <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Fecha <span className="text-red-400">*</span></label><input type="date" value={fechaCompra} onChange={(e) => setFechaCompra(e.target.value)} className={inputClass(errors.fechaCompra)} /></div>
                   </div>
