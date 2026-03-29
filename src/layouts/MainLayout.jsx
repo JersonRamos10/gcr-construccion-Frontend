@@ -10,7 +10,7 @@ export default function MainLayout({ children }) {
   const cerrarMenu = () => setMenuAbierto(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col sm:flex-row">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col sm:flex-row">
       {/* Sidebar de Desktop */}
       <div className="hidden sm:block">
         <Sidebar cerrarMenu={cerrarMenu} />
@@ -25,7 +25,7 @@ export default function MainLayout({ children }) {
             onClick={cerrarMenu}
           />
           {/* Menu slide-in */}
-          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg overflow-y-auto">
+          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 shadow-lg overflow-y-auto">
             <Sidebar cerrarMenu={cerrarMenu} />
           </div>
         </>

@@ -25,23 +25,23 @@ export default function PagosSummaryCards({ pagos }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-700">Total Pagado</h2>
-        <p className="text-2xl font-bold text-gray-900">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow border border-gray-100 dark:border-slate-700">
+        <h2 className="text-lg font-semibold text-gray-700 dark:text-slate-300">Total Pagado</h2>
+        <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">
           ${totalPagos.toLocaleString()}
         </p>
       </div>
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-700">Pago Promedio</h2>
-        <p className="text-2xl font-bold text-gray-900">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow border border-gray-100 dark:border-slate-700">
+        <h2 className="text-lg font-semibold text-gray-700 dark:text-slate-300">Pago Promedio</h2>
+        <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">
           ${promedioPago.toLocaleString()}
         </p>
       </div>
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-700">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow border border-gray-100 dark:border-slate-700">
+        <h2 className="text-lg font-semibold text-gray-700 dark:text-slate-300">
           Pagos (Este Mes)
         </h2>
-        <p className="text-2xl font-bold text-gray-900">{pagosEsteMes}</p>
+        <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{pagosEsteMes}</p>
       </div>
     </div>
   );

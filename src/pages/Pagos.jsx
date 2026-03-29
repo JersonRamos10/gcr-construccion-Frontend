@@ -62,7 +62,7 @@ export default function PagosManoObra() {
       setTotalPaginas(data.totalPages);
       setTotalItems(data.totalItems);
     } catch (error) {
-      alert("Error cargando el historial de pagos");
+      alert("Error cargando el historial de pagos", error);
     } finally {
       setLoading(false);
     }
@@ -118,8 +118,8 @@ export default function PagosManoObra() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">Planilla de Obra</h1>
-                <p className="text-gray-500 text-sm mt-1">Registra los pagos semanales o diarios del personal.</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Planilla de Obra</h1>
+                <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Registra los pagos semanales o diarios del personal.</p>
             </div>
             <button
                 onClick={() => setMostrarForm(!mostrarForm)}
@@ -132,15 +132,15 @@ export default function PagosManoObra() {
 
         {/* Formulario de Registro */}
         {mostrarForm && (
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-lg animate-fade-in-down">
-                <h2 className="text-lg font-semibold mb-4 text-gray-800">Nuevo Pago</h2>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg animate-fade-in-down">
+                <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-slate-100">Nuevo Pago</h2>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     
                     {/* Select Empleado */}
                     <div className="lg:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Empleado</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Empleado</label>
                         <select
-                            className="w-full border-gray-300 rounded-lg shadow-sm p-2 border focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg shadow-sm p-2 border focus:ring-blue-500 focus:border-blue-500"
                             value={empleadoSeleccionadoId}
                             onChange={(e) => setEmpleadoSeleccionadoId(e.target.value)}
                             required
@@ -156,9 +156,9 @@ export default function PagosManoObra() {
 
                     {/* Días Trabajados */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Días Trabajados (1-6)</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Días Trabajados (1-6)</label>
                         <select
-                             className="w-full border-gray-300 rounded-lg shadow-sm p-2 border"
+                             className="w-full border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg shadow-sm p-2 border"
                              value={diasTrabajados}
                              onChange={(e) => setDiasTrabajados(e.target.value)}
                         >
@@ -170,10 +170,10 @@ export default function PagosManoObra() {
 
                     {/* Fecha Pago */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de Pago</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Fecha de Pago</label>
                         <input
                             type="date"
-                            className="w-full border-gray-300 rounded-lg shadow-sm p-2 border"
+                            className="w-full border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg shadow-sm p-2 border"
                             value={fechaPago}
                             onChange={(e) => setFechaPago(e.target.value)}
                             required
@@ -181,8 +181,8 @@ export default function PagosManoObra() {
                     </div>
 
                     {/* Tarjeta de Resumen en Vivo */}
-                    <div className="lg:col-span-4 bg-gray-50 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center border border-gray-200">
-                        <div className="text-sm text-gray-600">
+                    <div className="lg:col-span-4 bg-gray-50 dark:bg-slate-800 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center border border-gray-200 dark:border-slate-700">
+                        <div className="text-sm text-gray-600 dark:text-slate-300">
                             {empleadoObj ? (
                                 <span>Calculando: <strong>${empleadoObj.pagoPorDia}</strong> x <strong>{diasTrabajados} días</strong></span>
                             ) : "Seleccione un empleado para calcular"}
@@ -202,11 +202,11 @@ export default function PagosManoObra() {
         )}
 
         {/* Filtros */}
-        <div className="bg-white p-4 rounded-lg border border-gray-200 flex flex-col md:flex-row gap-4 items-end">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-700 flex flex-col md:flex-row gap-4 items-end">
             <div className="w-full md:w-1/3">
-                <label className="text-xs font-semibold text-gray-500 uppercase">Filtrar por Empleado</label>
+                <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Filtrar por Empleado</label>
                 <select
-                    className="w-full mt-1 border-gray-300 rounded-md p-2 border text-sm"
+                    className="w-full mt-1 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-md p-2 border text-sm"
                     value={filtroEmpleado}
                     onChange={(e) => setFiltroEmpleado(e.target.value)}
                 >
@@ -217,19 +217,19 @@ export default function PagosManoObra() {
                 </select>
             </div>
             <div className="w-full md:w-1/3">
-                <label className="text-xs font-semibold text-gray-500 uppercase">Desde</label>
+                <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Desde</label>
                 <input 
                     type="date" 
-                    className="w-full mt-1 border-gray-300 rounded-md p-2 border text-sm"
+                    className="w-full mt-1 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-md p-2 border text-sm"
                     value={filtroFechaInicio}
                     onChange={(e) => setFiltroFechaInicio(e.target.value)}
                 />
             </div>
             <div className="w-full md:w-1/3">
-                <label className="text-xs font-semibold text-gray-500 uppercase">Hasta</label>
+                <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Hasta</label>
                 <input 
                     type="date" 
-                    className="w-full mt-1 border-gray-300 rounded-md p-2 border text-sm"
+                    className="w-full mt-1 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-md p-2 border text-sm"
                     value={filtroFechaFin}
                     onChange={(e) => setFiltroFechaFin(e.target.value)}
                 />

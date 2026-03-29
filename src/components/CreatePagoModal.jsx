@@ -24,12 +24,12 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <h3 className="text-lg font-bold mb-4">Nuevo Pago</h3>
+    <div className="fixed inset-0 bg-gray-600/60 dark:bg-black/70 overflow-y-auto h-full w-full">
+      <div className="relative top-20 mx-auto p-5 border dark:border-slate-700 w-96 shadow-lg rounded-md bg-white dark:bg-slate-900">
+        <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-slate-100">Nuevo Pago</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
               Empleado ID
             </label>
             <input
@@ -37,11 +37,11 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
               name="empleadoId"
               value={formData.empleadoId}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
               Monto
             </label>
             <input
@@ -49,11 +49,11 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
               name="monto"
               value={formData.monto}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
               Fecha
             </label>
             <input
@@ -61,7 +61,7 @@ export default function CreatePagoModal({ onClose, onPagoCreated }) {
               name="fecha"
               value={formData.fecha}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             />
           </div>
           <div className="flex justify-end">

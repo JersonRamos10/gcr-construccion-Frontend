@@ -219,7 +219,7 @@ export default function Compras() {
   useEffect(() => { cargarCompras(); calcularResumenTotal(); }, []);
 
   // Estilo Pasivo para Inputs
-  const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all text-gray-700 bg-white shadow-sm ${error ? "border-red-300 focus:ring-red-100 focus:border-red-400 bg-red-50" : "border-slate-200 focus:ring-blue-100 focus:border-blue-400 hover:border-slate-300"}`;
+  const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800 shadow-sm ${error ? "border-red-300 dark:border-red-700 focus:ring-red-100 focus:border-red-400 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 focus:ring-blue-100 focus:border-blue-400 hover:border-slate-300 dark:hover:border-slate-500"}`;
 
   return (
     <MainLayout>
@@ -228,8 +228,8 @@ export default function Compras() {
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Compras de Materiales</h1>
-            <p className="text-slate-500 text-sm mt-1">Gestión centralizada de adquisiciones e inventario.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Compras de Materiales</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Gestión centralizada de adquisiciones e inventario.</p>
           </div>
           <button
             onClick={() => { if (editandoId) limpiarFormulario(); else setMostrarFormulario(!mostrarFormulario); }}
@@ -242,16 +242,16 @@ export default function Compras() {
 
         {/* FORMULARIO (Diseño Refinado) */}
         {mostrarFormulario && (
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xl shadow-slate-100 animate-fade-in-down relative overflow-hidden">
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-xl shadow-slate-100 animate-fade-in-down relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-              <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
                   <span className="material-symbols-outlined text-blue-600">edit_note</span>
                   {editandoId ? "Editar Detalle de Compra" : "Registrar Nueva Adquisición"}
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Material <span className="text-red-400">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Cemento Portland" className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.nombre}</p>}</div>
-                  <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Categoría <span className="text-red-400">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} placeholder="Ej. Obra Gris" className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.categoriaNombre}</p>}</div>
+                  <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Material <span className="text-red-400">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Cemento Portland" className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.nombre}</p>}</div>
+                  <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Categoría <span className="text-red-400">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} placeholder="Ej. Obra Gris" className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.categoriaNombre}</p>}</div>
                   
                   <div className="grid grid-cols-2 gap-4">
                       <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Cantidad <span className="text-red-400">*</span></label><input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} placeholder="0" className={inputClass(errors.cantidad)} /></div>
@@ -283,8 +283,8 @@ export default function Compras() {
                       </div>
                   </div>
               </div>
-              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100">
-                  <button type="button" onClick={limpiarFormulario} className="px-6 py-2.5 rounded-lg border border-slate-300 text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Cancelar</button>
+              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-700">
+                  <button type="button" onClick={limpiarFormulario} className="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
                   <button type="submit" className="px-8 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg shadow-blue-100 transition-all">{editandoId ? "Guardar Cambios" : "Registrar Compra"}</button>
               </div>
           </form>
@@ -298,11 +298,11 @@ export default function Compras() {
         />
         
         {/* BARRA DE FILTROS */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-5 items-end">
+        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-5 items-end">
           <div className="w-full md:w-56">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 block">Mes de Compra</label>
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Mes de Compra</label>
               <div className="relative">
-                  <select value={mesSeleccionado} onChange={handleMesChange} className="block w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm bg-slate-50 font-medium text-slate-700 appearance-none cursor-pointer">
+                  <select value={mesSeleccionado} onChange={handleMesChange} className="block w-full pl-4 pr-10 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm bg-slate-50 dark:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 appearance-none cursor-pointer">
                       <option value="">Todos los meses</option>
                       <option value="0">Enero</option>
                       <option value="1">Febrero</option>
@@ -321,8 +321,8 @@ export default function Compras() {
               </div>
           </div>
           <div className="w-full md:flex-1 grid grid-cols-2 gap-4">
-              <div><label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 block">Desde</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 rounded-xl text-sm text-slate-600 focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} /></div>
-              <div><label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 block">Hasta</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 rounded-xl text-sm text-slate-600 focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none" value={fechaFin} onChange={(e) => {setFechaFin(e.target.value); setMesSeleccionado("");}} /></div>
+              <div><label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Desde</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} /></div>
+              <div><label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Hasta</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none" value={fechaFin} onChange={(e) => {setFechaFin(e.target.value); setMesSeleccionado("");}} /></div>
           </div>
           <button onClick={() => {setPaginaActual(1); cargarCompras(1);}} disabled={loading} className="w-full md:w-auto h-[42px] px-8 rounded-xl bg-slate-800 text-white font-semibold hover:bg-slate-900 transition-colors shadow-lg shadow-slate-200 disabled:opacity-50">Filtrar</button>
         </div>
