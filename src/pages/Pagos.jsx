@@ -15,6 +15,7 @@ export default function PagosManoObra() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [empleadoSeleccionadoId, setEmpleadoSeleccionadoId] = useState("");
   const [diasTrabajados, setDiasTrabajados] = useState("6"); // Por defecto semana completa
+  const [montoExtra, setMontoExtra] = useState("");
   const [fechaPago, setFechaPago] = useState(new Date().toISOString().split('T')[0]);
   
   // --- Estados de Filtros ---
@@ -78,6 +79,7 @@ export default function PagosManoObra() {
       await createPago({
         empleadoId: parseInt(empleadoSeleccionadoId),
         diasTrabajados: parseInt(diasTrabajados),
+        montoExtra: montoExtra ? parseFloat(montoExtra) : 0,
         fechaPago: fechaPago
       });
       
@@ -92,6 +94,7 @@ export default function PagosManoObra() {
   const resetForm = () => {
     setEmpleadoSeleccionadoId("");
     setDiasTrabajados("6");
+    setMontoExtra("");
     setFechaPago(new Date().toISOString().split('T')[0]);
   };
 
@@ -107,8 +110,9 @@ export default function PagosManoObra() {
 
   // --- Cálculo en Tiempo Real (Vista Previa) ---
   const empleadoObj = empleados.find(e => e.id === parseInt(empleadoSeleccionadoId));
+  const montoExtraNum = montoExtra ? parseFloat(montoExtra) : 0;
   const totalEstimado = empleadoObj 
-    ? (empleadoObj.pagoPorDia * diasTrabajados).toFixed(2) 
+    ? ((empleadoObj.pagoPorDia * diasTrabajados) + montoExtraNum).toFixed(2) 
     : "0.00";
 
   return (
@@ -180,11 +184,35 @@ export default function PagosManoObra() {
                         />
                     </div>
 
+                    {/* Monto Extra (Opcional) */}
+                    <div className="sm:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+                            Monto Extra <span className="text-gray-400 dark:text-slate-500 font-normal">(opcional — bonos, viáticos, etc.)</span>
+                        </label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm">$</span>
+                            <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                className="w-full pl-7 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg shadow-sm p-2 border focus:ring-blue-500 focus:border-blue-500"
+                                value={montoExtra}
+                                onChange={(e) => setMontoExtra(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
                     {/* Tarjeta de Resumen en Vivo */}
                     <div className="sm:col-span-2 bg-gray-50 dark:bg-slate-800 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border border-gray-200 dark:border-slate-700">
                         <div className="text-sm text-gray-600 dark:text-slate-300">
                             {empleadoObj ? (
-                                <span>Calculando: <strong>${empleadoObj.pagoPorDia}</strong> x <strong>{diasTrabajados} días</strong></span>
+                                <span>
+                                    Calculando: <strong>${empleadoObj.pagoPorDia}</strong> × <strong>{diasTrabajados} días</strong>
+                                    {montoExtraNum > 0 && (
+                                        <span className="text-amber-600 dark:text-amber-400"> + <strong>${montoExtraNum.toFixed(2)}</strong> extra</span>
+                                    )}
+                                </span>
                             ) : "Seleccione un empleado para calcular"}
                         </div>
                         <div className="text-xl font-bold text-blue-600 mt-2 sm:mt-0">

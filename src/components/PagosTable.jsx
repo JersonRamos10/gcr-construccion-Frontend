@@ -32,6 +32,7 @@ export default function PagosTable({
               <th className="px-4 sm:px-6 py-3 font-semibold">Empleado</th>
               <th className="px-4 sm:px-6 py-3 font-semibold text-center hidden md:table-cell">Días Trab.</th>
               <th className="px-4 sm:px-6 py-3 font-semibold text-right hidden md:table-cell">Pago Diario</th>
+              <th className="px-4 sm:px-6 py-3 font-semibold text-right hidden lg:table-cell">Monto Extra</th>
               <th className="px-4 sm:px-6 py-3 font-semibold text-right">Total Pagado</th>
               <th className="px-4 sm:px-6 py-3 font-semibold text-center">Acciones</th>
             </tr>
@@ -39,7 +40,7 @@ export default function PagosTable({
           <tbody>
             {pagos.length === 0 ? (
               <tr>
-                <td colSpan="6" className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
+                <td colSpan="7" className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   No se encontraron pagos registrados.
                 </td>
               </tr>
@@ -62,6 +63,15 @@ export default function PagosTable({
                   </td>
                   <td className="px-4 sm:px-6 py-4 text-right text-gray-500 dark:text-slate-400 hidden md:table-cell">
                     {formatearMoneda(pago.pagoPorDia)}
+                  </td>
+                  <td className="px-4 sm:px-6 py-4 text-right hidden lg:table-cell">
+                    {pago.montoExtra > 0 ? (
+                      <span className="text-amber-600 dark:text-amber-400 font-medium">
+                        +{formatearMoneda(pago.montoExtra)}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 dark:text-slate-500">—</span>
+                    )}
                   </td>
                   <td className="px-4 sm:px-6 py-4 text-right font-bold text-green-700 dark:text-green-400">
                     {formatearMoneda(pago.totalPagado)}
