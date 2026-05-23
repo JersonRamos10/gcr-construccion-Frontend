@@ -7,7 +7,6 @@ import { getPersonas, createPersona } from "../Api/personaApi";
 import { showAlert } from "../utils/alerts"; 
 
 export default function Ingresos() {
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const tablaRef = useRef(null);
 
   // Estados del formulario
