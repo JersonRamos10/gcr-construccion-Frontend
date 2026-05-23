@@ -6,11 +6,12 @@ const API_URL = `${API_BASE}/api/Ingreso`;
 /**
  * Obtener lista de ingresos con paginación y filtros
  */
-export async function getIngresos(page = 1, pageSize = 5, fromDate = "", toDate = "") {
+export async function getIngresos(page = 1, pageSize = 5, fromDate = "", toDate = "", personaId = null) {
   try {
     let url = `${API_URL}?page=${page}&pageSize=${pageSize}`;
     if (fromDate) url += `&fromDate=${fromDate}`;
     if (toDate) url += `&toDate=${toDate}`;
+    if (personaId) url += `&personaId=${personaId}`;
 
     console.log("📥 Cargando ingresos desde:", url);
     const response = await fetch(url);

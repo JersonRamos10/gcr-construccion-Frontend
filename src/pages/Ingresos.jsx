@@ -3,6 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import SummaryCards from "../components/SummaryCards";
 import IncomeTable from "../components/IncomeTable";
 import { getIngresos, createIngreso, deleteIngreso } from "../Api/ingresoApi";
+import { getPersonas, createPersona } from "../Api/personaApi";
 import { showAlert } from "../utils/alerts"; 
 
 export default function Ingresos() {
@@ -10,11 +11,22 @@ export default function Ingresos() {
   const tablaRef = useRef(null);
 
   // Estados del formulario
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [descripcion, setDescripcion] = useState("");
   const [monto, setMonto] = useState("");
   const [fecha, setFecha] = useState("");
+  const [enviadoPorId, setEnviadoPorId] = useState("");
+  const [recibidoPorId, setRecibidoPorId] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // Personas
+  const [personas, setPersonas] = useState([]);
+  const [mostrarFormPersona, setMostrarFormPersona] = useState(false);
+  const [nombreNuevaPersona, setNombreNuevaPersona] = useState("");
+
+  // Filtro por persona
+  const [filtroPersona, setFiltroPersona] = useState("");
 
   // Datos
   const [ingresos, setIngresos] = useState([]);
@@ -31,6 +43,19 @@ export default function Ingresos() {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const pageSize = 5;
+
+  // Cargar Personas
+  useEffect(() => {
+    async function loadPersonas() {
+      try {
+        const data = await getPersonas();
+        setPersonas(data);
+      } catch (error) {
+        console.error("Error cargando personas", error);
+      }
+    }
+    loadPersonas();
+  }, []);
 
   // --- CALCULAR RESUMEN ---
   const calcularResumenMesActual = async () => {
@@ -57,7 +82,7 @@ export default function Ingresos() {
 
   const cargarIngresosTabla = async (page = 1) => {
     try {
-      const data = await getIngresos(page, pageSize, fechaInicio, fechaFin);
+      const data = await getIngresos(page, pageSize, fechaInicio, fechaFin, filtroPersona || null);
       setIngresos(data.items || []);
       setPaginaActual(data.page || 1);
       setTotalPaginas(data.totalPages || 1);
@@ -97,9 +122,15 @@ export default function Ingresos() {
     }
     try {
       setLoading(true);
-      await createIngreso({ descripcion, monto: Number(monto), fecha });
+      await createIngreso({
+        descripcion,
+        monto: Number(monto),
+        fecha,
+        enviadoPorId: enviadoPorId ? parseInt(enviadoPorId) : null,
+        recibidoPorId: recibidoPorId ? parseInt(recibidoPorId) : null,
+      });
       showAlert("success", "Ingreso registrado correctamente");
-      setDescripcion(""); setMonto(""); setFecha(""); setErrors({});
+      setDescripcion(""); setMonto(""); setFecha(""); setEnviadoPorId(""); setRecibidoPorId(""); setErrors({});
       setMostrarFormulario(false);
       await cargarIngresosTabla(1);
       await calcularResumenMesActual();
@@ -108,6 +139,20 @@ export default function Ingresos() {
       showAlert("error", msg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCrearPersona = async (e) => {
+    e.preventDefault();
+    if (!nombreNuevaPersona.trim()) return showAlert("error", "El nombre es obligatorio");
+    try {
+      const nueva = await createPersona({ nombre: nombreNuevaPersona.trim() });
+      setPersonas((prev) => [...prev, nueva]);
+      setNombreNuevaPersona("");
+      setMostrarFormPersona(false);
+      showAlert("success", "Persona creada correctamente");
+    } catch (error) {
+      showAlert("error", error.message || "Error al crear persona");
     }
   };
 
@@ -123,7 +168,7 @@ export default function Ingresos() {
   };
 
   const limpiarFormulario = () => {
-    setDescripcion(""); setMonto(""); setFecha(""); setErrors({});
+    setDescripcion(""); setMonto(""); setFecha(""); setEnviadoPorId(""); setRecibidoPorId(""); setErrors({});
     setMostrarFormulario(false);
   }
 
@@ -177,6 +222,65 @@ export default function Ingresos() {
                         <textarea className={`${inputClass(errors.descripcion)} h-auto py-3 resize-none`} rows="3" placeholder="Ej. Anticipo Proyecto X..." value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
                         {errors.descripcion && <p className="text-xs text-red-500 mt-1 font-medium">{errors.descripcion}</p>}
                     </div>
+
+                    {/* Enviado Por */}
+                    <div>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Enviado Por <span className="text-gray-400 dark:text-slate-500 font-normal">(opcional)</span></label>
+                        <select
+                            className={inputClass("")}
+                            value={enviadoPorId}
+                            onChange={(e) => setEnviadoPorId(e.target.value)}
+                        >
+                            <option value="">-- Seleccione --</option>
+                            {personas.map(p => (
+                                <option key={p.id} value={p.id}>{p.nombre}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Recibido Por */}
+                    <div>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Recibido Por <span className="text-gray-400 dark:text-slate-500 font-normal">(opcional)</span></label>
+                        <select
+                            className={inputClass("")}
+                            value={recibidoPorId}
+                            onChange={(e) => setRecibidoPorId(e.target.value)}
+                        >
+                            <option value="">-- Seleccione --</option>
+                            {personas.map(p => (
+                                <option key={p.id} value={p.id}>{p.nombre}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Botón para agregar nueva persona */}
+                    <div className="sm:col-span-2">
+                        {!mostrarFormPersona ? (
+                            <button
+                                type="button"
+                                onClick={() => setMostrarFormPersona(true)}
+                                className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                            >
+                                <span className="material-symbols-outlined text-sm">person_add</span>
+                                Agregar nueva persona
+                            </button>
+                        ) : (
+                            <form onSubmit={handleCrearPersona} className="flex gap-2 items-end">
+                                <div className="flex-1">
+                                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Nombre de la persona</label>
+                                    <input
+                                        type="text"
+                                        className={inputClass("")}
+                                        placeholder="Nombre completo"
+                                        value={nombreNuevaPersona}
+                                        onChange={(e) => setNombreNuevaPersona(e.target.value)}
+                                    />
+                                </div>
+                                <button type="submit" className="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-semibold">Guardar</button>
+                                <button type="button" onClick={() => { setMostrarFormPersona(false); setNombreNuevaPersona(""); }} className="px-4 py-2.5 border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-semibold">Cancelar</button>
+                            </form>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-700">
@@ -195,8 +299,21 @@ export default function Ingresos() {
         />
 
         {/* BARRA DE FILTROS */}
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-5 items-end">
-            <div className="w-full md:flex-1 grid grid-cols-2 gap-4">
+        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col lg:flex-row gap-5 items-end">
+            <div className="w-full lg:flex-1 grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="lg:col-span-2">
+                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Filtrar por Persona</label>
+                    <select
+                        className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-green-100 focus:border-green-400 outline-none"
+                        value={filtroPersona}
+                        onChange={(e) => setFiltroPersona(e.target.value)}
+                    >
+                        <option value="">Todas las personas</option>
+                        {personas.map(p => (
+                            <option key={p.id} value={p.id}>{p.nombre}</option>
+                        ))}
+                    </select>
+                </div>
                 <div>
                     <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Desde</label>
                     <input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-green-100 focus:border-green-400 outline-none" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
@@ -206,13 +323,13 @@ export default function Ingresos() {
                     <input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-green-100 focus:border-green-400 outline-none" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
                 </div>
             </div>
-            <button onClick={handleAplicarFiltro} className="w-full md:w-auto h-[42px] px-8 rounded-xl bg-slate-800 dark:bg-slate-700 text-white font-semibold hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-lg shadow-slate-200">
+            <button onClick={handleAplicarFiltro} className="w-full lg:w-auto h-[42px] px-8 rounded-xl bg-slate-800 dark:bg-slate-700 text-white font-semibold hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-lg shadow-slate-200">
                 Filtrar Resultados
             </button>
         </div>
 
         <div ref={tablaRef} className="scroll-mt-4">
-           <IncomeTable ingresos={ingresos} paginaActual={paginaActual} totalPaginas={totalPaginas} totalItems={totalItems} onChangePagina={(p) => { if(p>=1 && p<=totalPaginas) cargarIngresosTabla(p)}} onDelete={handleEliminar} pageSize={pageSize} />
+           <IncomeTable ingresos={ingresos} paginaActual={paginaActual} totalPaginas={totalPaginas} totalItems={totalItems} onChangePagina={(p) => { if(p>=1 && p<=totalPaginas) cargarIngresosTabla(p)}} onDelete={handleEliminar} pageSize={pageSize} personas={personas} />
         </div>
       </div>
     </MainLayout>
