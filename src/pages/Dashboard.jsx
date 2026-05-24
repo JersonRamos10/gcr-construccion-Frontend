@@ -103,21 +103,21 @@ export default function Dashboard() {
         </div>
 
         {/* 3. CAPITAL DISPONIBLE (HERO CARD) */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow-lg text-white p-6 sm:p-10">
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 dark:from-neutral-800 dark:to-neutral-900 rounded-xl shadow-lg text-white p-6 sm:p-10">
             <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <p className="text-blue-100 font-medium mb-1 text-sm sm:text-base opacity-90">Capital Disponible Actual</p>
+                    <p className="text-blue-100 dark:text-neutral-300 font-medium mb-1 text-sm sm:text-base opacity-90">Capital Disponible Actual</p>
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold">
                         ${formatearMoneda(resumen?.capitalDisponible || 0)}
                     </h2>
                 </div>
-                <div className="bg-white/10 p-3 rounded-full backdrop-blur-sm">
+                <div className="bg-white/10 dark:bg-white/5 p-3 rounded-full backdrop-blur-sm">
                     <span className="material-symbols-outlined text-4xl text-white">account_balance_wallet</span>
                 </div>
             </div>
             {/* Decoración de fondo */}
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/5 blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-40 h-40 rounded-full bg-white/10 blur-2xl"></div>
+            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/5 dark:bg-white/3 blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-40 h-40 rounded-full bg-white/10 dark:bg-white/5 blur-2xl"></div>
         </div>
 
         {/* 4. BARRA DE SALUD FINANCIERA (Entradas vs Salidas) */}
