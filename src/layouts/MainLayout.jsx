@@ -10,9 +10,9 @@ export default function MainLayout({ children }) {
   const cerrarMenu = () => setMenuAbierto(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col sm:flex-row">
-      {/* Sidebar de Desktop */}
-      <div className="hidden sm:block">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
+      {/* Sidebar de Desktop (fijo, full height) */}
+      <div className="hidden sm:block fixed inset-y-0 left-0 w-64 z-30">
         <Sidebar cerrarMenu={cerrarMenu} />
       </div>
 
@@ -31,7 +31,8 @@ export default function MainLayout({ children }) {
         </>
       )}
 
-      <div className="flex-1 flex flex-col">
+      {/* Contenido principal (con margen izquierdo para el sidebar fijo) */}
+      <div className="sm:ml-64 flex flex-col min-h-screen">
         <Navbar toggleMenu={toggleMenu} />
 
         <main className="flex-1 p-3 sm:p-4 lg:p-6">

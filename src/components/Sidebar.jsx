@@ -13,8 +13,8 @@ export default function Sidebar({ cerrarMenu }) {
   };
 
   return (
-    <aside className="w-full sm:w-64 bg-white dark:bg-slate-900 border-b sm:border-b-0 sm:border-r border-gray-200 dark:border-slate-700">
-      <div className="p-4 sm:p-6 font-bold text-lg sm:text-xl text-blue-600 dark:text-blue-400 flex items-center justify-between">
+    <aside className="w-full sm:w-64 h-screen bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 flex flex-col">
+      <div className="p-4 sm:p-6 font-bold text-lg sm:text-xl text-blue-600 dark:text-blue-400 flex items-center justify-between flex-shrink-0">
         <span>GCR Construcción</span>
         {/* Botón cerrar (solo visible en móvil) */}
         {cerrarMenu && (
