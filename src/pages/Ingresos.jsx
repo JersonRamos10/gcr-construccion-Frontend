@@ -3,13 +3,12 @@ import MainLayout from "../layouts/MainLayout";
 import SummaryCards from "../components/SummaryCards";
 import IncomeTable from "../components/IncomeTable";
 import { getIngresos, createIngreso, deleteIngreso } from "../Api/ingresoApi";
-import { getPersonas, createPersona } from "../Api/personaApi";
+import { getPersonas, createPersona, deletePersona } from "../Api/personaApi";
 import { showAlert } from "../utils/alerts"; 
 
 export default function Ingresos() {
   const tablaRef = useRef(null);
 
-  // Estados del formulario
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [descripcion, setDescripcion] = useState("");
   const [monto, setMonto] = useState("");
@@ -19,15 +18,14 @@ export default function Ingresos() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Personas
   const [personas, setPersonas] = useState([]);
   const [mostrarFormPersona, setMostrarFormPersona] = useState(false);
   const [nombreNuevaPersona, setNombreNuevaPersona] = useState("");
+  const [editandoPersonaId, setEditandoPersonaId] = useState(null);
+  const [nombreEditPersona, setNombreEditPersona] = useState("");
 
-  // Filtro por persona
   const [filtroPersona, setFiltroPersona] = useState("");
 
-  // Datos
   const [ingresos, setIngresos] = useState([]);
   const [resumenDatos, setResumenDatos] = useState({
     totalMes: "0.00",
@@ -35,7 +33,6 @@ export default function Ingresos() {
     ultimoIngreso: "--",
   });
 
-  // Paginación y Filtros
   const [paginaActual, setPaginaActual] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -43,7 +40,6 @@ export default function Ingresos() {
   const [fechaFin, setFechaFin] = useState("");
   const pageSize = 5;
 
-  // Cargar Personas
   useEffect(() => {
     async function loadPersonas() {
       try {
@@ -56,7 +52,6 @@ export default function Ingresos() {
     loadPersonas();
   }, []);
 
-  // --- CALCULAR RESUMEN ---
   const calcularResumenMesActual = async () => {
     try {
         const now = new Date();
@@ -68,7 +63,6 @@ export default function Ingresos() {
         const promedio = itemsMes.length > 0 ? total / itemsMes.length : 0;
         const ordenados = [...itemsMes].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         const ultimo = ordenados[0];
-        // Ajuste de fecha local para visualización
         const fechaUltimo = ultimo ? new Date(ultimo.fecha).toLocaleDateString("es-ES", { day: 'numeric', month: 'short', year: 'numeric' }) : "--";
 
         setResumenDatos({
@@ -87,7 +81,7 @@ export default function Ingresos() {
       setTotalPaginas(data.totalPages || 1);
       setTotalItems(data.totalItems || 0);
     } catch (error) {
-      console.error("❌ Error cargando tabla:", error);
+      console.error("Error cargando tabla:", error);
       setIngresos([]);
     }
   };
@@ -155,6 +149,17 @@ export default function Ingresos() {
     }
   };
 
+  const handleEliminarPersona = async (id) => {
+    if(!confirm("¿Eliminar esta persona? Los ingresos asociados no se eliminarán.")) return;
+    try {
+      await deletePersona(id);
+      setPersonas((prev) => prev.filter(p => p.id !== id));
+      showAlert("success", "Persona eliminada");
+    } catch (error) {
+      showAlert("error", error.message || "Error al eliminar persona");
+    }
+  };
+
   const handleEliminar = async (id) => {
     try {
       await deleteIngreso(id);
@@ -171,7 +176,6 @@ export default function Ingresos() {
     setMostrarFormulario(false);
   }
 
-  // Estilo Pasivo (Igual que Compras)
   const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-1 transition-all text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 shadow-sm ${error ? "border-red-300 dark:border-red-700 focus:ring-red-300 focus:border-red-400 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 hover:border-slate-300 dark:hover:border-slate-500"}`;
 
   return (
@@ -184,16 +188,71 @@ export default function Ingresos() {
             <h1 className="text-2xl sm:text-3xl font-semibold text-slate-800 dark:text-slate-100">Gestión de Ingresos</h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Control de entradas financieras y abonos.</p>
           </div>
-          <button
-            onClick={() => { if(mostrarFormulario) limpiarFormulario(); else setMostrarFormulario(true); }}
-            className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all ${mostrarFormulario ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
-          >
-            <span className="material-symbols-outlined">{mostrarFormulario ? "close" : "add"}</span>
-            <span>{mostrarFormulario ? "Cancelar Registro" : "Nuevo Ingreso"}</span>
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setMostrarFormPersona(!mostrarFormPersona)}
+              className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all ${mostrarFormPersona ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+            >
+              <span className="material-symbols-outlined">{mostrarFormPersona ? "close" : "person_add"}</span>
+              <span>{mostrarFormPersona ? "Cancelar" : "Gestionar Personas"}</span>
+            </button>
+            <button
+              onClick={() => { if(mostrarFormulario) limpiarFormulario(); else setMostrarFormulario(true); }}
+              className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all ${mostrarFormulario ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
+            >
+              <span className="material-symbols-outlined">{mostrarFormulario ? "close" : "add"}</span>
+              <span>{mostrarFormulario ? "Cancelar Registro" : "Nuevo Ingreso"}</span>
+            </button>
+          </div>
         </div>
 
-        {/* FORMULARIO INLINE (Igual que Compras) */}
+        {/* SECCION GESTION DE PERSONAS */}
+        {mostrarFormPersona && (
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm">
+                <h3 className="text-base font-medium text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-indigo-600">group</span>
+                    Personas Registradas
+                </h3>
+
+                {/* Form agregar persona */}
+                <form onSubmit={handleCrearPersona} className="flex gap-2 items-end mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                    <div className="flex-1">
+                        <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Nueva persona</label>
+                        <input
+                            type="text"
+                            className={inputClass("")}
+                            placeholder="Nombre completo"
+                            value={nombreNuevaPersona}
+                            onChange={(e) => setNombreNuevaPersona(e.target.value)}
+                        />
+                    </div>
+                    <button type="submit" className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-semibold">Agregar</button>
+                </form>
+
+                {/* Lista de personas */}
+                {personas.length === 0 ? (
+                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No hay personas registradas</p>
+                ) : (
+                    <div className="space-y-2">
+                        {personas.map(p => (
+                            <div key={p.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                <span className="text-slate-700 dark:text-slate-200 font-medium">{p.nombre}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => handleEliminarPersona(p.id)}
+                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded transition-colors"
+                                    title="Eliminar"
+                                >
+                                    <span className="material-symbols-outlined text-lg">delete</span>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        )}
+
+        {/* FORMULARIO DE INGRESO */}
         {mostrarFormulario && (
             <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm relative">
                 
@@ -221,7 +280,6 @@ export default function Ingresos() {
                         {errors.descripcion && <p className="text-xs text-red-500 mt-1 font-medium">{errors.descripcion}</p>}
                     </div>
 
-                    {/* Enviado Por */}
                     <div>
                         <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Enviado Por <span className="text-slate-400 dark:text-slate-500 font-normal">(opcional)</span></label>
                         <select
@@ -236,7 +294,6 @@ export default function Ingresos() {
                         </select>
                     </div>
 
-                    {/* Recibido Por */}
                     <div>
                         <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Recibido Por <span className="text-slate-400 dark:text-slate-500 font-normal">(opcional)</span></label>
                         <select
@@ -249,35 +306,6 @@ export default function Ingresos() {
                                 <option key={p.id} value={p.id}>{p.nombre}</option>
                             ))}
                         </select>
-                    </div>
-
-                    {/* Botón para agregar nueva persona */}
-                    <div className="sm:col-span-2">
-                        {!mostrarFormPersona ? (
-                            <button
-                                type="button"
-                                onClick={() => setMostrarFormPersona(true)}
-                                className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-                            >
-                                <span className="material-symbols-outlined text-sm">person_add</span>
-                                Agregar nueva persona
-                            </button>
-                        ) : (
-                            <form onSubmit={handleCrearPersona} className="flex gap-2 items-end">
-                                <div className="flex-1">
-                                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Nombre de la persona</label>
-                                    <input
-                                        type="text"
-                                        className={inputClass("")}
-                                        placeholder="Nombre completo"
-                                        value={nombreNuevaPersona}
-                                        onChange={(e) => setNombreNuevaPersona(e.target.value)}
-                                    />
-                                </div>
-                                <button type="submit" className="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-semibold">Guardar</button>
-                                <button type="button" onClick={() => { setMostrarFormPersona(false); setNombreNuevaPersona(""); }} className="px-4 py-2.5 border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-semibold">Cancelar</button>
-                            </form>
-                        )}
                     </div>
                 </div>
 

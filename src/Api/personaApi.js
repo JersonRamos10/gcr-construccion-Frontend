@@ -30,3 +30,16 @@ export async function createPersona(personaData) {
     throw error;
   }
 }
+
+export async function deletePersona(id) {
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Error al eliminar persona");
+    return true;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
