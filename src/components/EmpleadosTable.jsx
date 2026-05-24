@@ -24,7 +24,7 @@ export default function EmpleadosTable({ empleados, onEdit, onDelete }) {
             <thead className="border-b border-slate-200 dark:border-neutral-700">
                 <tr>
                 <th className="px-6 py-3 font-semibold text-slate-500 dark:text-neutral-400">Nombre Completo</th>
-                <th className="px-6 py-3 font-semibold text-right text-slate-500 dark:text-neutral-400">Pago por Día</th>
+                <th className="px-6 py-3 font-semibold text-right hidden sm:table-cell text-slate-500 dark:text-neutral-400">Pago por Día</th>
                 <th className="px-6 py-3 font-semibold text-center text-slate-500 dark:text-neutral-400">Acciones</th>
                 </tr>
             </thead>
@@ -41,8 +41,11 @@ export default function EmpleadosTable({ empleados, onEdit, onDelete }) {
                     <tr key={empleado.id} className="border-b border-slate-100 dark:border-neutral-800 last:border-0">
                     <td className="px-6 py-4">
                         <div className="font-medium text-slate-800 dark:text-neutral-100">{empleado.nombreCompleto}</div>
+                        <div className="text-xs text-slate-400 dark:text-neutral-500 sm:hidden mt-1">
+                            {formatearMoneda(empleado.pagoPorDia)} / día
+                        </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right hidden sm:table-cell">
                         <span className="text-green-700 dark:text-green-400 font-medium">
                             {formatearMoneda(empleado.pagoPorDia)} / día
                         </span>

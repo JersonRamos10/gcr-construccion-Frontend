@@ -15,15 +15,12 @@ export default function Navbar({ toggleMenu }) {
           <span className="material-symbols-outlined text-2xl">menu</span>
         </button>
 
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-          Dashboard financiero
+        <h1 className="text-base sm:text-xl font-semibold text-gray-900 dark:text-white truncate">
+          Sistema de gestión de construcción
         </h1>
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="text-xs sm:text-sm text-gray-500 dark:text-neutral-400">
-          Sistema de gestión de construcción
-        </span>
 
         {/* Botón Dark / Light */}
         <button
