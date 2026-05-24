@@ -1,14 +1,12 @@
-import { showConfirm } from "../utils/alerts"; // IMPORTAR
+import { showConfirm } from "../utils/alerts";
 
 export default function EmpleadosTable({ empleados, onEdit, onDelete }) {
   
-    // Formatear moneda
     const formatearMoneda = (valor) => {
       const num = Number(valor);
       return num.toLocaleString("es-SV", { style: "currency", currency: "USD" });
     };
 
-    // Manejar eliminación con confirmación
     const handleDeleteClick = async (id) => {
         const confirmado = await showConfirm(
             "¿Eliminar empleado?",
@@ -20,32 +18,32 @@ export default function EmpleadosTable({ empleados, onEdit, onDelete }) {
     };
   
     return (
-      <div className="bg-white dark:bg-slate-900 overflow-hidden rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
         <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-600 dark:text-slate-300">
-            <thead className="bg-gray-50 dark:bg-slate-800 text-xs text-gray-700 dark:text-slate-400 uppercase border-b border-gray-200 dark:border-slate-700">
+            <table className="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+            <thead className="border-b border-slate-200 dark:border-slate-700">
                 <tr>
-                <th className="px-6 py-4 font-semibold tracking-wide">Nombre Completo</th>
-                <th className="px-6 py-4 font-semibold text-right tracking-wide">Pago por Día</th>
-                <th className="px-6 py-4 font-semibold text-center tracking-wide">Acciones</th>
+                <th className="px-6 py-3 font-semibold text-slate-500 dark:text-slate-400">Nombre Completo</th>
+                <th className="px-6 py-3 font-semibold text-right text-slate-500 dark:text-slate-400">Pago por Día</th>
+                <th className="px-6 py-3 font-semibold text-center text-slate-500 dark:text-slate-400">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {empleados.length === 0 ? (
                 <tr>
-                    <td colSpan="3" className="px-6 py-12 text-center text-gray-500 dark:text-slate-400">
-                    <span className="material-symbols-outlined text-4xl text-gray-300 dark:text-slate-600 mb-2">group_off</span>
+                    <td colSpan="3" className="px-6 py-12 text-center text-slate-400 dark:text-slate-500">
+                    <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-2">group_off</span>
                     <p>No hay empleados registrados.</p>
                     </td>
                 </tr>
                 ) : (
                 empleados.map((empleado) => (
-                    <tr key={empleado.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-blue-50 dark:hover:bg-slate-800/60 transition-colors last:border-0">
+                    <tr key={empleado.id} className="border-b border-slate-100 dark:border-slate-800 last:border-0">
                     <td className="px-6 py-4">
-                        <div className="font-medium text-gray-900 dark:text-slate-100 text-base">{empleado.nombreCompleto}</div>
+                        <div className="font-medium text-slate-800 dark:text-slate-100">{empleado.nombreCompleto}</div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                        <span className="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded border border-green-200 dark:border-green-800">
+                        <span className="text-green-700 dark:text-green-400 font-medium">
                             {formatearMoneda(empleado.pagoPorDia)} / día
                         </span>
                     </td>
@@ -53,14 +51,14 @@ export default function EmpleadosTable({ empleados, onEdit, onDelete }) {
                         <div className="flex justify-center gap-2">
                         <button
                             onClick={() => onEdit(empleado)}
-                            className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"
                             title="Editar"
                         >
                             <span className="material-symbols-outlined text-xl">edit</span>
                         </button>
                         <button
                             onClick={() => handleDeleteClick(empleado.id)}
-                            className="p-2 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-red-600 rounded-lg transition-colors"
                             title="Eliminar"
                         >
                             <span className="material-symbols-outlined text-xl">delete</span>

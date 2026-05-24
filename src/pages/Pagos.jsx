@@ -122,7 +122,7 @@ export default function PagosManoObra() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Planilla de Obra</h1>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-slate-100">Planilla de Obra</h1>
                 <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Registra los pagos semanales o diarios del personal.</p>
             </div>
             <button
@@ -136,8 +136,8 @@ export default function PagosManoObra() {
 
         {/* Formulario de Registro */}
         {mostrarForm && (
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg animate-fade-in-down">
-                <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-slate-100">Nuevo Pago</h2>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
+                <h2 className="text-base font-medium mb-4 text-gray-800 dark:text-slate-100">Nuevo Pago</h2>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     
                     {/* Select Empleado */}
@@ -221,7 +221,7 @@ export default function PagosManoObra() {
                     </div>
 
                     <div className="sm:col-span-2 flex justify-end">
-                        <button type="submit" className="w-full sm:w-auto bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 font-medium shadow-sm">
+                        <button type="submit" className="w-full sm:w-auto bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 font-medium">
                             Confirmar Pago
                         </button>
                     </div>
@@ -233,7 +233,7 @@ export default function PagosManoObra() {
         <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-gray-200 dark:border-slate-700 flex flex-col gap-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-                <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Filtrar por Empleado</label>
+                <label className="text-sm font-medium text-gray-600 dark:text-slate-300">Filtrar por Empleado</label>
                 <select
                     className="w-full mt-1 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={filtroEmpleado}
@@ -246,7 +246,7 @@ export default function PagosManoObra() {
                 </select>
             </div>
             <div>
-                <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Desde</label>
+                <label className="text-sm font-medium text-gray-600 dark:text-slate-300">Desde</label>
                 <input 
                     type="date" 
                     className="w-full mt-1 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -255,7 +255,7 @@ export default function PagosManoObra() {
                 />
             </div>
             <div>
-                <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Hasta</label>
+                <label className="text-sm font-medium text-gray-600 dark:text-slate-300">Hasta</label>
                 <input 
                     type="date" 
                     className="w-full mt-1 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"

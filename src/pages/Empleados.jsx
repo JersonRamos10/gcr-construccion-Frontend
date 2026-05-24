@@ -122,7 +122,7 @@ export default function Empleados() {
         {/* Encabezado */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Empleados</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-slate-100">Empleados</h1>
             <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Gestión de personal y costos de mano de obra.</p>
           </div>
           <button
@@ -145,8 +145,8 @@ export default function Empleados() {
 
         {/* Formulario Desplegable */}
         {mostrarForm && (
-          <div className="mb-8 bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm animate-fade-in-down">
-            <h2 className="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-4">
+          <div className="mb-8 bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
+            <h2 className="text-base font-medium text-gray-800 dark:text-slate-100 mb-4">
               {editandoId ? "Editar Empleado" : "Registrar Nuevo Empleado"}
             </h2>
             
@@ -190,7 +190,7 @@ export default function Empleados() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   {editandoId ? "Actualizar" : "Guardar"}
                 </button>

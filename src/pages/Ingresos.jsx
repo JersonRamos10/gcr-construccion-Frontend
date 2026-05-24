@@ -172,7 +172,7 @@ export default function Ingresos() {
   }
 
   // Estilo Pasivo (Igual que Compras)
-  const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 shadow-sm ${error ? "border-red-300 dark:border-red-700 focus:ring-red-100 focus:border-red-400 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 focus:ring-green-100 focus:border-green-400 hover:border-slate-300 dark:hover:border-slate-500"}`;
+  const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-1 transition-all text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 shadow-sm ${error ? "border-red-300 dark:border-red-700 focus:ring-red-300 focus:border-red-400 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 hover:border-slate-300 dark:hover:border-slate-500"}`;
 
   return (
     <MainLayout>
@@ -181,12 +181,12 @@ export default function Ingresos() {
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Gestión de Ingresos</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-slate-800 dark:text-slate-100">Gestión de Ingresos</h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Control de entradas financieras y abonos.</p>
           </div>
           <button
             onClick={() => { if(mostrarFormulario) limpiarFormulario(); else setMostrarFormulario(true); }}
-            className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-semibold shadow-md transition-all transform active:scale-95 ${mostrarFormulario ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg'}`}
+            className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all ${mostrarFormulario ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
           >
             <span className="material-symbols-outlined">{mostrarFormulario ? "close" : "add"}</span>
             <span>{mostrarFormulario ? "Cancelar Registro" : "Nuevo Ingreso"}</span>
@@ -195,36 +195,35 @@ export default function Ingresos() {
 
         {/* FORMULARIO INLINE (Igual que Compras) */}
         {mostrarFormulario && (
-            <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-xl shadow-slate-100 animate-fade-in-down relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm relative">
                 
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+                <h3 className="text-base font-medium text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
                     <span className="material-symbols-outlined text-green-600">attach_money</span>
                     Registrar Entrada de Dinero
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Monto <span className="text-red-400">*</span></label>
+                        <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Monto <span className="text-red-400">*</span></label>
                         <input type="number" placeholder="0.00" className={inputClass(errors.monto)} value={monto} onChange={(e) => setMonto(e.target.value)} step="0.01" min="0" />
                         {errors.monto && <p className="text-xs text-red-500 mt-1 font-medium">{errors.monto}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Fecha <span className="text-red-400">*</span></label>
+                        <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Fecha <span className="text-red-400">*</span></label>
                         <input type="date" className={inputClass(errors.fecha)} value={fecha} onChange={(e) => setFecha(e.target.value)} />
                         {errors.fecha && <p className="text-xs text-red-500 mt-1 font-medium">{errors.fecha}</p>}
                     </div>
 
                     <div className="sm:col-span-2">
-                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Descripción / Concepto <span className="text-red-400">*</span></label>
+                        <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Descripción / Concepto <span className="text-red-400">*</span></label>
                         <textarea className={`${inputClass(errors.descripcion)} h-auto py-3 resize-none`} rows="3" placeholder="Ej. Anticipo Proyecto X..." value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
                         {errors.descripcion && <p className="text-xs text-red-500 mt-1 font-medium">{errors.descripcion}</p>}
                     </div>
 
                     {/* Enviado Por */}
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Enviado Por <span className="text-gray-400 dark:text-slate-500 font-normal">(opcional)</span></label>
+                        <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Enviado Por <span className="text-slate-400 dark:text-slate-500 font-normal">(opcional)</span></label>
                         <select
                             className={inputClass("")}
                             value={enviadoPorId}
@@ -239,7 +238,7 @@ export default function Ingresos() {
 
                     {/* Recibido Por */}
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Recibido Por <span className="text-gray-400 dark:text-slate-500 font-normal">(opcional)</span></label>
+                        <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Recibido Por <span className="text-slate-400 dark:text-slate-500 font-normal">(opcional)</span></label>
                         <select
                             className={inputClass("")}
                             value={recibidoPorId}
@@ -266,7 +265,7 @@ export default function Ingresos() {
                         ) : (
                             <form onSubmit={handleCrearPersona} className="flex gap-2 items-end">
                                 <div className="flex-1">
-                                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Nombre de la persona</label>
+                                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Nombre de la persona</label>
                                     <input
                                         type="text"
                                         className={inputClass("")}
@@ -284,7 +283,7 @@ export default function Ingresos() {
 
                 <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-700">
                     <button type="button" onClick={limpiarFormulario} className="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
-                    <button type="submit" disabled={loading} className="px-8 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg shadow-green-100 transition-all disabled:opacity-50">
+                    <button type="submit" disabled={loading} className="px-8 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition-all disabled:opacity-50">
                         {loading ? "Guardando..." : "Guardar Ingreso"}
                     </button>
                 </div>
@@ -298,10 +297,10 @@ export default function Ingresos() {
         />
 
         {/* BARRA DE FILTROS */}
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col lg:flex-row gap-5 items-end">
+        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col lg:flex-row gap-5 items-end">
             <div className="w-full lg:flex-1 grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="lg:col-span-2">
-                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Filtrar por Persona</label>
+                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 block">Filtrar por Persona</label>
                     <select
                         className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-green-100 focus:border-green-400 outline-none"
                         value={filtroPersona}
@@ -314,15 +313,15 @@ export default function Ingresos() {
                     </select>
                 </div>
                 <div>
-                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Desde</label>
-                    <input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-green-100 focus:border-green-400 outline-none" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
+                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 block">Desde</label>
+                    <input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 outline-none" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
                 </div>
                 <div>
-                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 block">Hasta</label>
-                    <input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-2 focus:ring-green-100 focus:border-green-400 outline-none" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
+                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 block">Hasta</label>
+                    <input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 outline-none" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
                 </div>
             </div>
-            <button onClick={handleAplicarFiltro} className="w-full lg:w-auto h-[42px] px-8 rounded-xl bg-slate-800 dark:bg-slate-700 text-white font-semibold hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-lg shadow-slate-200">
+            <button onClick={handleAplicarFiltro} className="w-full lg:w-auto h-[42px] px-8 rounded-lg bg-slate-800 dark:bg-slate-700 text-white font-medium hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors">
                 Filtrar Resultados
             </button>
         </div>

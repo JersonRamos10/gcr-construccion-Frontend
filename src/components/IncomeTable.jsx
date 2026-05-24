@@ -13,33 +13,12 @@ export default function IncomeTable({
   personas = []
 }) {
   const [search, setSearch] = useState("");
-  const [seleccionados, setSeleccionados] = useState(new Set());
   const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null);
 
   const formatearFecha = (f) => { try { return new Date(f).toLocaleDateString("es-ES", {year:"numeric", month:"short", day:"numeric"}); } catch { return "--"; }};
   const formatearMonto = (m) => Number(m || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
   const ingresosFiltrados = ingresos.filter((ingreso) => (ingreso.descripcion || "").toLowerCase().includes(search.toLowerCase()));
-
-  const toggleSeleccionar = (id) => {
-    const newSet = new Set(seleccionados);
-    newSet.has(id) ? newSet.delete(id) : newSet.add(id);
-    setSeleccionados(newSet);
-  };
-
-  const toggleSeleccionarTodos = () => {
-    setSeleccionados(seleccionados.size === ingresosFiltrados.length ? new Set() : new Set(ingresosFiltrados.map(i => i.id)));
-  };
-
-  const handleEliminar = async () => {
-    if (seleccionados.size === 0) return showAlert("warning", "Selecciona al menos un ingreso");
-    const confirmado = await showConfirm("¿Eliminar seleccionados?", `Se borrarán ${seleccionados.size} registros.`);
-    if (!confirmado) return;
-    try {
-      for (const id of seleccionados) await onDelete(id);
-      setSeleccionados(new Set());
-    } catch (e) { console.error(e); }
-  };
 
   const handleEliminarIndividual = async (id) => {
     const confirmado = await showConfirm("¿Eliminar ingreso?", "No podrás recuperarlo después.");
@@ -48,50 +27,41 @@ export default function IncomeTable({
 
   return (
     <div className="space-y-5">
-      {/* Barra de Búsqueda */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
         <div className="relative flex-1 w-full max-w-md group">
-          <input type="text" placeholder="Buscar por descripción..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-100 dark:focus:ring-slate-700 focus:border-slate-400 dark:focus:border-slate-500 text-sm bg-white dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 transition-all shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600" />
+          <input type="text" placeholder="Buscar por descripción..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 dark:focus:border-slate-500 text-sm bg-white dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 transition-all shadow-sm" />
           <span className="material-symbols-outlined absolute left-3.5 top-2.5 text-slate-400 text-[20px]">search</span>
         </div>
-        {seleccionados.size > 0 && (
-            <button onClick={handleEliminar} className="px-5 py-2 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 font-semibold rounded-xl text-sm flex items-center gap-2 transition-colors border border-red-100 dark:border-red-800">
-            <span className="material-symbols-outlined text-[18px]">delete</span> Eliminar ({seleccionados.size})
-          </button>
-        )}
       </div>
 
-      {/* Tabla */}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+          <thead className="border-b border-slate-200 dark:border-slate-700">
             <tr>
-              <th className="px-6 py-4 w-10 text-center"><input type="checkbox" checked={ingresosFiltrados.length > 0 && seleccionados.size === ingresosFiltrados.length} onChange={toggleSeleccionarTodos} className="rounded border-slate-300 dark:border-slate-600 text-slate-800 dark:bg-slate-700 focus:ring-slate-200 cursor-pointer" /></th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Descripción</th>
-              <th className="px-6 py-4 hidden lg:table-cell text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Enviado Por</th>
-              <th className="px-6 py-4 hidden lg:table-cell text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Recibido Por</th>
-              <th className="px-6 py-4 hidden sm:table-cell text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fecha</th>
-              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Monto</th>
-              <th className="px-6 py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400">Descripción</th>
+              <th className="px-6 py-3 hidden lg:table-cell text-left text-xs font-semibold text-slate-500 dark:text-slate-400">Enviado Por</th>
+              <th className="px-6 py-3 hidden lg:table-cell text-left text-xs font-semibold text-slate-500 dark:text-slate-400">Recibido Por</th>
+              <th className="px-6 py-3 hidden sm:table-cell text-left text-xs font-semibold text-slate-500 dark:text-slate-400">Fecha</th>
+              <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">Monto</th>
+              <th className="px-6 py-3 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {ingresosFiltrados.length === 0 ? (
-              <tr><td colSpan="7" className="p-12 text-center text-slate-400 dark:text-slate-500 font-medium">No se encontraron registros</td></tr>
+              <tr><td colSpan="6" className="p-12 text-center text-slate-400 dark:text-slate-500">No se encontraron registros</td></tr>
             ) : (
               ingresosFiltrados.map((ing) => (
-                <tr key={ing.id} onClick={() => setIngresoSeleccionado(ing)} className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/60 cursor-pointer transition-colors ${seleccionados.has(ing.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : ''}`}>
-                  <td className="px-6 py-4 text-center"><input type="checkbox" checked={seleccionados.has(ing.id)} onClick={(e) => e.stopPropagation()} onChange={() => toggleSeleccionar(ing.id)} className="rounded border-slate-300 dark:border-slate-600 dark:bg-slate-700 text-slate-800 focus:ring-slate-200 cursor-pointer" /></td>
+                <tr key={ing.id} onClick={() => setIngresoSeleccionado(ing)} className="cursor-pointer">
                   <td className="px-6 py-4">
-                    <div className="font-bold text-slate-800 dark:text-slate-100 text-base">{ing.descripcion || "Sin descripción"}</div>
+                    <div className="font-medium text-slate-800 dark:text-slate-100">{ing.descripcion || "Sin descripción"}</div>
                     <div className="text-xs text-slate-400 dark:text-slate-500 sm:hidden mt-1">{formatearFecha(ing.fecha)}</div>
                   </td>
                   <td className="px-6 py-4 hidden lg:table-cell text-slate-600 dark:text-slate-300">{ing.enviadoPor?.nombre || <span className="text-slate-400 dark:text-slate-500">—</span>}</td>
                   <td className="px-6 py-4 hidden lg:table-cell text-slate-600 dark:text-slate-300">{ing.recibidoPor?.nombre || <span className="text-slate-400 dark:text-slate-500">—</span>}</td>
-                  <td className="px-6 py-4 hidden sm:table-cell text-slate-600 dark:text-slate-300 font-medium">{formatearFecha(ing.fecha)}</td>
-                  <td className="px-6 py-4 font-bold text-green-600 dark:text-green-400 text-right text-base">+${formatearMonto(ing.monto)}</td>
+                  <td className="px-6 py-4 hidden sm:table-cell text-slate-600 dark:text-slate-300">{formatearFecha(ing.fecha)}</td>
+                  <td className="px-6 py-4 font-medium text-green-600 dark:text-green-400 text-right">+${formatearMonto(ing.monto)}</td>
                   <td className="px-6 py-4 text-center">
-                      <button onClick={(e) => { e.stopPropagation(); handleEliminarIndividual(ing.id); }} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"><span className="material-symbols-outlined text-[20px]">delete</span></button>
+                      <button onClick={(e) => { e.stopPropagation(); handleEliminarIndividual(ing.id); }} className="p-2 text-slate-400 hover:text-rose-600 rounded-lg transition-all"><span className="material-symbols-outlined text-[20px]">delete</span></button>
                   </td>
                 </tr>
               ))
@@ -108,23 +78,22 @@ export default function IncomeTable({
         onChangePagina={onChangePagina}
       />
 
-      {/* Modal Detalle (Estilo Coherente) */}
       {ingresoSeleccionado && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/20 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in-up border border-slate-100 dark:border-slate-700">
-            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-start bg-slate-50/50 dark:bg-slate-800/50">
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Detalle de Ingreso</h3>
-                <button onClick={() => setIngresoSeleccionado(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-white dark:bg-slate-800 rounded-full p-1.5 shadow-sm border border-slate-100 dark:border-slate-600 hover:border-slate-300 transition-all"><span className="material-symbols-outlined text-xl block">close</span></button>
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up border border-slate-100 dark:border-slate-700">
+            <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-start">
+                <h3 className="text-base font-medium text-slate-800 dark:text-slate-100">Detalle de Ingreso</h3>
+                <button onClick={() => setIngresoSeleccionado(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full p-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"><span className="material-symbols-outlined text-xl block">close</span></button>
             </div>
-            <div className="p-6 space-y-6">
-                <div><p className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2">Descripción</p><p className="text-lg font-medium text-slate-800 dark:text-slate-100">{ingresoSeleccionado.descripcion}</p></div>
+            <div className="p-6 space-y-5">
+                <div><p className="text-xs text-slate-400 font-medium mb-1">Descripción</p><p className="text-base text-slate-800 dark:text-slate-100">{ingresoSeleccionado.descripcion}</p></div>
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700"><p className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Fecha</p><p className="text-base font-bold text-slate-800 dark:text-slate-100">{formatearFecha(ingresoSeleccionado.fecha)}</p></div>
-                    <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-100 dark:border-green-800"><p className="text-xs text-green-600 dark:text-green-400 uppercase font-bold tracking-wider mb-1">Monto</p><p className="text-xl font-bold text-green-700 dark:text-green-300">+${formatearMonto(ingresoSeleccionado.monto)}</p></div>
+                    <div><p className="text-xs text-slate-400 font-medium mb-1">Fecha</p><p className="text-base font-medium text-slate-800 dark:text-slate-100">{formatearFecha(ingresoSeleccionado.fecha)}</p></div>
+                    <div><p className="text-xs text-green-600 dark:text-green-400 font-medium mb-1">Monto</p><p className="text-xl font-semibold text-green-700 dark:text-green-300">+${formatearMonto(ingresoSeleccionado.monto)}</p></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700"><p className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Enviado Por</p><p className="text-base font-medium text-slate-800 dark:text-slate-100">{ingresoSeleccionado.enviadoPor?.nombre || <span className="text-slate-400">—</span>}</p></div>
-                    <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700"><p className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Recibido Por</p><p className="text-base font-medium text-slate-800 dark:text-slate-100">{ingresoSeleccionado.recibidoPor?.nombre || <span className="text-slate-400">—</span>}</p></div>
+                    <div><p className="text-xs text-slate-400 font-medium mb-1">Enviado Por</p><p className="text-base text-slate-800 dark:text-slate-100">{ingresoSeleccionado.enviadoPor?.nombre || <span className="text-slate-400">—</span>}</p></div>
+                    <div><p className="text-xs text-slate-400 font-medium mb-1">Recibido Por</p><p className="text-base text-slate-800 dark:text-slate-100">{ingresoSeleccionado.recibidoPor?.nombre || <span className="text-slate-400">—</span>}</p></div>
                 </div>
             </div>
           </div>

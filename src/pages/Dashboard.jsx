@@ -56,17 +56,17 @@ export default function Dashboard() {
         {/* 1. ENCABEZADO Y ACCIONES RÁPIDAS */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Panel de Control</h1>
+            <h1 className="text-3xl font-semibold text-gray-900 dark:text-slate-100">Panel de Control</h1>
             <p className="text-gray-500 dark:text-slate-400 mt-1">Bienvenido, al panel de control del estado financiero del proyecto.</p>
           </div>
           
           {/* Botones de Acción Rápida */}
           <div className="flex flex-col xs:flex-row sm:flex-row flex-wrap gap-3">
-            <Link to="/compras" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 transition-all font-medium shadow-sm w-full sm:w-auto">
+            <Link to="/compras" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 transition-all font-medium w-full sm:w-auto">
                 <span className="material-symbols-outlined text-blue-600">shopping_cart</span>
                 Nueva Compra
             </Link>
-            <Link to="/ingresos" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium shadow-md shadow-green-200 w-full sm:w-auto">
+            <Link to="/ingresos" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium w-full sm:w-auto">
                 <span className="material-symbols-outlined">attach_money</span>
                 Nuevo Ingreso
             </Link>
@@ -76,19 +76,19 @@ export default function Dashboard() {
         {/* 2. FILTROS (Manteniendo tu lógica, mejorando visualmente) */}
         <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4 items-end">
             <div className="w-full md:flex-1">
-              <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1 block">Desde</label>
+              <label className="text-sm font-medium text-gray-600 dark:text-slate-300 mb-1 block">Desde</label>
               <input
                 type="date"
-                className="block w-full h-11 px-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm"
+                className="block w-full h-11 px-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-blue-500 transition-all text-sm"
                 value={fechaInicio}
                 onChange={(e) => setFechaInicio(e.target.value)}
               />
             </div>
             <div className="w-full md:flex-1">
-              <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1 block">Hasta</label>
+              <label className="text-sm font-medium text-gray-600 dark:text-slate-300 mb-1 block">Hasta</label>
               <input
                 type="date"
-                className="block w-full h-11 px-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm"
+                className="block w-full h-11 px-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-blue-500 transition-all text-sm"
                 value={fechaFin}
                 onChange={(e) => setFechaFin(e.target.value)}
               />
@@ -96,18 +96,18 @@ export default function Dashboard() {
             <button
               onClick={cargarResumen}
               disabled={loading}
-              className="w-full md:w-auto h-11 px-8 rounded-lg bg-gray-900 hover:bg-black text-white font-semibold transition-colors shadow-lg disabled:opacity-50"
+              className="w-full md:w-auto h-11 px-8 rounded-lg bg-gray-900 hover:bg-black text-white font-medium transition-colors disabled:opacity-50"
             >
               {loading ? "Actualizando..." : "Filtrar Resultados"}
             </button>
         </div>
 
         {/* 3. CAPITAL DISPONIBLE (HERO CARD) */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl shadow-xl text-white p-6 sm:p-10">
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow-lg text-white p-6 sm:p-10">
             <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <p className="text-blue-100 font-medium mb-1 text-sm sm:text-base opacity-90">Capital Disponible Actual</p>
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold">
                         ${formatearMoneda(resumen?.capitalDisponible || 0)}
                     </h2>
                 </div>
@@ -153,26 +153,26 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Ingresos */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                 <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg">
                         <span className="material-symbols-outlined text-2xl">trending_up</span>
                     </div>
-                    <p className="text-sm font-semibold text-gray-500 dark:text-slate-400 uppercase">Total Ingresos</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Total Ingresos</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalIngresos || 0)}</p>
-                <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">+ Entradas registradas</p>
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalIngresos || 0)}</p>
+                <p className="text-xs text-green-600 dark:text-green-400 mt-1">+ Entradas registradas</p>
             </div>
 
             {/* Compras (Materiales) */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                  <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
                         <span className="material-symbols-outlined text-2xl">inventory_2</span>
                     </div>
-                    <p className="text-sm font-semibold text-gray-500 dark:text-slate-400 uppercase">Gasto Materiales</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Gasto Materiales</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalComprasMaterial || 0)}</p>
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalComprasMaterial || 0)}</p>
                 <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5 mt-3">
                     <div className="bg-red-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalComprasMaterial || 0) / totalGastos * 100) : 0}%` }}></div>
                 </div>
@@ -180,14 +180,14 @@ export default function Dashboard() {
             </div>
 
             {/* Pagos (Mano de Obra) */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                  <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg">
                         <span className="material-symbols-outlined text-2xl">engineering</span>
                     </div>
-                    <p className="text-sm font-semibold text-gray-500 dark:text-slate-400 uppercase">Mano de Obra</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Mano de Obra</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalPagosEmpleados || 0)}</p>
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalPagosEmpleados || 0)}</p>
                  <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5 mt-3">
                     <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalPagosEmpleados || 0) / totalGastos * 100) : 0}%` }}></div>
                 </div>
@@ -198,7 +198,7 @@ export default function Dashboard() {
         {/* 6. RESUMEN TEXTUAL (Estilo Ticket/Factura) */}
         {resumen && (
             <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-6 border border-gray-200 dark:border-slate-700 border-dashed">
-                <h3 className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase mb-4 tracking-wider">Detalle del Balance</h3>
+                <h3 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-4">Detalle del Balance</h3>
                 <div className="space-y-3 text-sm">
                     <div className="flex justify-between text-gray-600 dark:text-slate-300">
                         <span>Ingresos Totales</span>
