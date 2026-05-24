@@ -56,13 +56,13 @@ export default function Dashboard() {
         {/* 1. ENCABEZADO Y ACCIONES RÁPIDAS */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-semibold text-gray-900 dark:text-slate-100">Panel de Control</h1>
-            <p className="text-gray-500 dark:text-slate-400 mt-1">Bienvenido, al panel de control del estado financiero del proyecto.</p>
+            <h1 className="text-3xl font-semibold text-gray-900 dark:text-neutral-100">Panel de Control</h1>
+            <p className="text-gray-500 dark:text-neutral-400 mt-1">Bienvenido, al panel de control del estado financiero del proyecto.</p>
           </div>
           
           {/* Botones de Acción Rápida */}
           <div className="flex flex-col xs:flex-row sm:flex-row flex-wrap gap-3">
-            <Link to="/compras" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 transition-all font-medium w-full sm:w-auto">
+            <Link to="/compras" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-200 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-700 hover:border-gray-300 transition-all font-medium w-full sm:w-auto">
                 <span className="material-symbols-outlined text-blue-600">shopping_cart</span>
                 Nueva Compra
             </Link>
@@ -74,21 +74,21 @@ export default function Dashboard() {
         </div>
 
         {/* 2. FILTROS (Manteniendo tu lógica, mejorando visualmente) */}
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4 items-end">
+        <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl border border-gray-200 dark:border-neutral-700 shadow-sm flex flex-col md:flex-row gap-4 items-end">
             <div className="w-full md:flex-1">
-              <label className="text-sm font-medium text-gray-600 dark:text-slate-300 mb-1 block">Desde</label>
+              <label className="text-sm font-medium text-gray-600 dark:text-neutral-300 mb-1 block">Desde</label>
               <input
                 type="date"
-                className="block w-full h-11 px-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-blue-500 transition-all text-sm"
+                className="block w-full h-11 px-3 border border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-neutral-600 focus:border-blue-500 transition-all text-sm"
                 value={fechaInicio}
                 onChange={(e) => setFechaInicio(e.target.value)}
               />
             </div>
             <div className="w-full md:flex-1">
-              <label className="text-sm font-medium text-gray-600 dark:text-slate-300 mb-1 block">Hasta</label>
+              <label className="text-sm font-medium text-gray-600 dark:text-neutral-300 mb-1 block">Hasta</label>
               <input
                 type="date"
-                className="block w-full h-11 px-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-blue-500 transition-all text-sm"
+                className="block w-full h-11 px-3 border border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-neutral-600 focus:border-blue-500 transition-all text-sm"
                 value={fechaFin}
                 onChange={(e) => setFechaFin(e.target.value)}
               />
@@ -122,17 +122,17 @@ export default function Dashboard() {
 
         {/* 4. BARRA DE SALUD FINANCIERA (Entradas vs Salidas) */}
         {resumen && (
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
+            <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-200 dark:border-neutral-700 shadow-sm">
                 <div className="flex justify-between items-end mb-2">
                     <div>
-                        <h3 className="text-gray-900 dark:text-slate-100 font-semibold">Flujo de Caja</h3>
-                        <p className="text-xs text-gray-500 dark:text-slate-400">Relación Ingresos vs. Gastos Totales</p>
+                        <h3 className="text-gray-900 dark:text-neutral-100 font-semibold">Flujo de Caja</h3>
+                        <p className="text-xs text-gray-500 dark:text-neutral-400">Relación Ingresos vs. Gastos Totales</p>
                     </div>
-                    <span className="text-sm font-bold text-gray-700 dark:text-slate-300">{porcentajeGastado.toFixed(1)}% Gastado</span>
+                    <span className="text-sm font-bold text-gray-700 dark:text-neutral-300">{porcentajeGastado.toFixed(1)}% Gastado</span>
                 </div>
                 
                 {/* Barra Fondo */}
-                <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-4 overflow-hidden">
+                <div className="w-full bg-gray-100 dark:bg-neutral-700 rounded-full h-4 overflow-hidden">
                     {/* Barra Progreso */}
                     <div 
                         className={`h-full rounded-full transition-all duration-1000 ease-out ${
@@ -142,7 +142,7 @@ export default function Dashboard() {
                     ></div>
                 </div>
                 
-                <div className="flex justify-between mt-2 text-xs text-gray-500 dark:text-slate-400 font-medium">
+                <div className="flex justify-between mt-2 text-xs text-gray-500 dark:text-neutral-400 font-medium">
                     <span>$0</span>
                     <span>Meta: No exceder Ingresos (${formatearMoneda(totalIngresos)})</span>
                 </div>
@@ -153,67 +153,67 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Ingresos */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
+            <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm">
                 <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg">
                         <span className="material-symbols-outlined text-2xl">trending_up</span>
                     </div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Total Ingresos</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Total Ingresos</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalIngresos || 0)}</p>
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-neutral-100">${formatearMoneda(resumen?.totalIngresos || 0)}</p>
                 <p className="text-xs text-green-600 dark:text-green-400 mt-1">+ Entradas registradas</p>
             </div>
 
             {/* Compras (Materiales) */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
+            <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm">
                  <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
                         <span className="material-symbols-outlined text-2xl">inventory_2</span>
                     </div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Gasto Materiales</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Gasto Materiales</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalComprasMaterial || 0)}</p>
-                <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5 mt-3">
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-neutral-100">${formatearMoneda(resumen?.totalComprasMaterial || 0)}</p>
+                <div className="w-full bg-gray-100 dark:bg-neutral-700 rounded-full h-1.5 mt-3">
                     <div className="bg-red-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalComprasMaterial || 0) / totalGastos * 100) : 0}%` }}></div>
                 </div>
-                <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">Representa el {totalGastos > 0 ? ((resumen?.totalComprasMaterial || 0) / totalGastos * 100).toFixed(0) : 0}% de tus gastos</p>
+                <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">Representa el {totalGastos > 0 ? ((resumen?.totalComprasMaterial || 0) / totalGastos * 100).toFixed(0) : 0}% de tus gastos</p>
             </div>
 
             {/* Pagos (Mano de Obra) */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
+            <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm">
                  <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg">
                         <span className="material-symbols-outlined text-2xl">engineering</span>
                     </div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Mano de Obra</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Mano de Obra</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-slate-100">${formatearMoneda(resumen?.totalPagosEmpleados || 0)}</p>
-                 <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5 mt-3">
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-neutral-100">${formatearMoneda(resumen?.totalPagosEmpleados || 0)}</p>
+                 <div className="w-full bg-gray-100 dark:bg-neutral-700 rounded-full h-1.5 mt-3">
                     <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalPagosEmpleados || 0) / totalGastos * 100) : 0}%` }}></div>
                 </div>
-                <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">Representa el {totalGastos > 0 ? ((resumen?.totalPagosEmpleados || 0) / totalGastos * 100).toFixed(0) : 0}% de tus gastos</p>
+                <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">Representa el {totalGastos > 0 ? ((resumen?.totalPagosEmpleados || 0) / totalGastos * 100).toFixed(0) : 0}% de tus gastos</p>
             </div>
         </div>
 
         {/* 6. RESUMEN TEXTUAL (Estilo Ticket/Factura) */}
         {resumen && (
-            <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-6 border border-gray-200 dark:border-slate-700 border-dashed">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-4">Detalle del Balance</h3>
+            <div className="bg-gray-50 dark:bg-neutral-800 rounded-xl p-6 border border-gray-200 dark:border-neutral-700 border-dashed">
+                <h3 className="text-sm font-medium text-gray-500 dark:text-neutral-400 mb-4">Detalle del Balance</h3>
                 <div className="space-y-3 text-sm">
-                    <div className="flex justify-between text-gray-600 dark:text-slate-300">
+                    <div className="flex justify-between text-gray-600 dark:text-neutral-300">
                         <span>Ingresos Totales</span>
-                        <span className="font-medium text-gray-900 dark:text-slate-100">${formatearMoneda(resumen.totalIngresos)}</span>
+                        <span className="font-medium text-gray-900 dark:text-neutral-100">${formatearMoneda(resumen.totalIngresos)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-600 dark:text-slate-300">
+                    <div className="flex justify-between text-gray-600 dark:text-neutral-300">
                         <span>(-) Compras de Material</span>
                         <span className="font-medium text-red-600">-${formatearMoneda(resumen.totalComprasMaterial)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-600 dark:text-slate-300 pb-3 border-b border-gray-300 dark:border-slate-600 border-dashed">
+                    <div className="flex justify-between text-gray-600 dark:text-neutral-300 pb-3 border-b border-gray-300 dark:border-neutral-600 border-dashed">
                         <span>(-) Pagos de Nómina</span>
                         <span className="font-medium text-orange-600">-${formatearMoneda(resumen.totalPagosEmpleados)}</span>
                     </div>
                     <div className="flex justify-between text-base font-bold pt-1">
-                        <span className="text-gray-800 dark:text-slate-200">Resultado Neto (Ganancia/Pérdida)</span>
+                        <span className="text-gray-800 dark:text-neutral-200">Resultado Neto (Ganancia/Pérdida)</span>
                         <span className={(resumen.totalIngresos - totalGastos) >= 0 ? "text-green-600" : "text-red-600"}>
                             ${formatearMoneda(resumen.totalIngresos - totalGastos)}
                         </span>

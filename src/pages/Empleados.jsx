@@ -110,10 +110,10 @@ export default function Empleados() {
   // Helper de estilos para inputs
   const inputClass = (error) => `
     w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all
-    dark:bg-slate-800 dark:text-slate-200
+    dark:bg-neutral-800 dark:text-neutral-200
     ${error 
       ? "border-red-500 dark:border-red-700 focus:ring-red-200 bg-red-50 dark:bg-red-900/20" 
-      : "border-gray-300 dark:border-slate-600 focus:ring-blue-500 focus:border-blue-500"}
+      : "border-gray-300 dark:border-neutral-600 focus:ring-blue-500 focus:border-blue-500"}
   `;
 
   return (
@@ -122,8 +122,8 @@ export default function Empleados() {
         {/* Encabezado */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-slate-100">Empleados</h1>
-            <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Gestión de personal y costos de mano de obra.</p>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-neutral-100">Empleados</h1>
+            <p className="text-gray-500 dark:text-neutral-400 text-sm mt-1">Gestión de personal y costos de mano de obra.</p>
           </div>
           <button
             onClick={() => {
@@ -145,8 +145,8 @@ export default function Empleados() {
 
         {/* Formulario Desplegable */}
         {mostrarForm && (
-          <div className="mb-8 bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
-            <h2 className="text-base font-medium text-gray-800 dark:text-slate-100 mb-4">
+          <div className="mb-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-200 dark:border-neutral-700 shadow-sm">
+            <h2 className="text-base font-medium text-gray-800 dark:text-neutral-100 mb-4">
               {editandoId ? "Editar Empleado" : "Registrar Nuevo Empleado"}
             </h2>
             
@@ -154,7 +154,7 @@ export default function Empleados() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Nombre */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nombre Completo <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Nombre Completo <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     value={nombreCompleto}
@@ -167,7 +167,7 @@ export default function Empleados() {
 
                 {/* Pago */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Pago por Día ($) <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-1">Pago por Día ($) <span className="text-red-500">*</span></label>
                   <input
                     type="number"
                     step="0.01"
@@ -184,7 +184,7 @@ export default function Empleados() {
                  <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-neutral-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
                 >
                   Cancelar
                 </button>

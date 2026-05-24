@@ -5,7 +5,7 @@ export default function Sidebar({ cerrarMenu }) {
     `flex items-center gap-3 px-3 sm:px-4 py-3 rounded text-sm sm:text-base transition-colors ${
       isActive
         ? "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-bold"
-        : "text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
+        : "text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
     }`;
 
   const handleNavClick = () => {
@@ -13,14 +13,14 @@ export default function Sidebar({ cerrarMenu }) {
   };
 
   return (
-    <aside className="w-full sm:w-64 h-screen bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 flex flex-col">
+    <aside className="w-full sm:w-64 h-screen bg-white dark:bg-neutral-900 border-r border-gray-200 dark:border-neutral-700 flex flex-col">
       <div className="p-4 sm:p-6 font-bold text-lg sm:text-xl text-blue-600 dark:text-blue-400 flex items-center justify-between flex-shrink-0">
         <span>GCR Construcción</span>
         {/* Botón cerrar (solo visible en móvil) */}
         {cerrarMenu && (
           <button
             onClick={cerrarMenu}
-            className="sm:hidden text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200"
+            className="sm:hidden text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200"
             title="Cerrar menú"
           >
             <span className="material-symbols-outlined">close</span>

@@ -219,7 +219,7 @@ export default function Compras() {
   useEffect(() => { cargarCompras(); calcularResumenTotal(); }, []);
 
   // Estilo Pasivo para Inputs
-  const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-1 transition-all text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800 shadow-sm ${error ? "border-red-300 dark:border-red-700 focus:ring-red-300 focus:border-red-400 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-blue-400 hover:border-slate-300 dark:hover:border-slate-500"}`;
+  const inputClass = (error) => `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-1 transition-all text-gray-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 shadow-sm ${error ? "border-red-300 dark:border-red-700 focus:ring-red-300 focus:border-red-400 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-neutral-600 focus:ring-slate-300 dark:focus:ring-neutral-600 focus:border-blue-400 hover:border-slate-300 dark:hover:border-neutral-500"}`;
 
   return (
     <MainLayout>
@@ -228,8 +228,8 @@ export default function Compras() {
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-slate-800 dark:text-slate-100">Compras de Materiales</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Gestión centralizada de adquisiciones e inventario.</p>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-slate-800 dark:text-neutral-100">Compras de Materiales</h1>
+            <p className="text-slate-500 dark:text-neutral-400 text-sm mt-1">Gestión centralizada de adquisiciones e inventario.</p>
           </div>
           <button
             onClick={() => { if (editandoId) limpiarFormulario(); else setMostrarFormulario(!mostrarFormulario); }}
@@ -242,24 +242,24 @@ export default function Compras() {
 
         {/* FORMULARIO (Diseño Refinado) */}
         {mostrarFormulario && (
-          <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm relative">
-              <h3 className="text-base font-medium text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-neutral-900 rounded-xl border border-slate-200 dark:border-neutral-700 p-6 sm:p-8 shadow-sm relative">
+              <h3 className="text-base font-medium text-slate-800 dark:text-neutral-100 mb-6 flex items-center gap-2">
                   <span className="material-symbols-outlined text-blue-600">edit_note</span>
                   {editandoId ? "Editar Detalle de Compra" : "Registrar Nueva Adquisición"}
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div><label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Material <span className="text-red-400">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Cemento Portland" className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.nombre}</p>}</div>
-                  <div><label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Categoría <span className="text-red-400">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} placeholder="Ej. Obra Gris" className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.categoriaNombre}</p>}</div>
+                  <div><label className="block text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1">Material <span className="text-red-400">*</span></label><input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Cemento Portland" className={inputClass(errors.nombre)} />{errors.nombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.nombre}</p>}</div>
+                  <div><label className="block text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1">Categoría <span className="text-red-400">*</span></label><input type="text" value={categoriaNombre} onChange={(e) => setCategoriaNombre(e.target.value)} placeholder="Ej. Obra Gris" className={inputClass(errors.categoriaNombre)} />{errors.categoriaNombre && <p className="text-xs text-red-500 mt-1 font-medium">{errors.categoriaNombre}</p>}</div>
                   
                   <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-                      <div><label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Cantidad <span className="text-red-400">*</span></label><input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} placeholder="0" className={inputClass(errors.cantidad)} /></div>
-                      <div><label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Medida</label><input type="text" value={medida} onChange={(e) => setMedida(e.target.value)} placeholder="kg, m" className={inputClass(null)} /></div>
+                      <div><label className="block text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1">Cantidad <span className="text-red-400">*</span></label><input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} placeholder="0" className={inputClass(errors.cantidad)} /></div>
+                      <div><label className="block text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1">Medida</label><input type="text" value={medida} onChange={(e) => setMedida(e.target.value)} placeholder="kg, m" className={inputClass(null)} /></div>
                   </div>
                   
                   <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-                      <div><label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Precio Unit. <span className="text-red-400">*</span></label><input type="number" step="0.01" value={precioUnitario} onChange={(e) => setPrecioUnitario(e.target.value)} placeholder="0.00" className={inputClass(errors.precioUnitario)} /></div>
-                      <div><label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Fecha <span className="text-red-400">*</span></label><input type="date" value={fechaCompra} onChange={(e) => setFechaCompra(e.target.value)} className={inputClass(errors.fechaCompra)} /></div>
+                      <div><label className="block text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1">Precio Unit. <span className="text-red-400">*</span></label><input type="number" step="0.01" value={precioUnitario} onChange={(e) => setPrecioUnitario(e.target.value)} placeholder="0.00" className={inputClass(errors.precioUnitario)} /></div>
+                      <div><label className="block text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1">Fecha <span className="text-red-400">*</span></label><input type="date" value={fechaCompra} onChange={(e) => setFechaCompra(e.target.value)} className={inputClass(errors.fechaCompra)} /></div>
                   </div>
                   
                   <div className="sm:col-span-2 pt-4 border-t border-slate-100">
@@ -282,8 +282,8 @@ export default function Compras() {
                       </div>
                   </div>
               </div>
-              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-700">
-                  <button type="button" onClick={limpiarFormulario} className="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
+              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-neutral-700">
+                  <button type="button" onClick={limpiarFormulario} className="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-neutral-600 text-slate-600 dark:text-neutral-300 font-semibold hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors">Cancelar</button>
                   <button type="submit" className="px-8 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all">{editandoId ? "Guardar Cambios" : "Registrar Compra"}</button>
               </div>
           </form>
@@ -297,11 +297,11 @@ export default function Compras() {
         />
         
         {/* BARRA DE FILTROS */}
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-5 items-end">
+        <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl border border-slate-200 dark:border-neutral-700 shadow-sm flex flex-col md:flex-row gap-5 items-end">
           <div className="w-full md:w-56">
-              <label className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 block">Mes de Compra</label>
+              <label className="text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1 block">Mes de Compra</label>
               <div className="relative">
-                  <select value={mesSeleccionado} onChange={handleMesChange} className="block w-full pl-4 pr-10 py-2.5 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 text-sm bg-white dark:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 appearance-none cursor-pointer">
+                  <select value={mesSeleccionado} onChange={handleMesChange} className="block w-full pl-4 pr-10 py-2.5 border border-slate-200 dark:border-neutral-600 rounded-lg focus:ring-1 focus:ring-slate-300 dark:focus:ring-neutral-600 focus:border-slate-400 text-sm bg-white dark:bg-neutral-800 font-medium text-slate-700 dark:text-neutral-200 appearance-none cursor-pointer">
                       <option value="">Todos los meses</option>
                       <option value="0">Enero</option>
                       <option value="1">Febrero</option>
@@ -320,8 +320,8 @@ export default function Compras() {
               </div>
           </div>
           <div className="w-full md:flex-1 grid grid-cols-2 gap-4">
-              <div><label className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 block">Desde</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 outline-none" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} /></div>
-              <div><label className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 block">Hasta</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 dark:bg-slate-800 focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 focus:border-slate-400 outline-none" value={fechaFin} onChange={(e) => {setFechaFin(e.target.value); setMesSeleccionado("");}} /></div>
+              <div><label className="text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1 block">Desde</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-neutral-600 rounded-lg text-sm text-slate-600 dark:text-neutral-300 dark:bg-neutral-800 focus:ring-1 focus:ring-slate-300 dark:focus:ring-neutral-600 focus:border-slate-400 outline-none" value={fechaInicio} onChange={(e) => {setFechaInicio(e.target.value); setMesSeleccionado(""); }} /></div>
+              <div><label className="text-sm font-medium text-slate-600 dark:text-neutral-300 mb-1 block">Hasta</label><input type="date" className="block w-full py-2.5 px-3 border border-slate-200 dark:border-neutral-600 rounded-lg text-sm text-slate-600 dark:text-neutral-300 dark:bg-neutral-800 focus:ring-1 focus:ring-slate-300 dark:focus:ring-neutral-600 focus:border-slate-400 outline-none" value={fechaFin} onChange={(e) => {setFechaFin(e.target.value); setMesSeleccionado("");}} /></div>
           </div>
           <button onClick={() => {setPaginaActual(1); cargarCompras(1);}} disabled={loading} className="w-full md:w-auto h-[42px] px-8 rounded-lg bg-slate-800 text-white font-medium hover:bg-slate-900 transition-colors disabled:opacity-50">Filtrar</button>
         </div>

@@ -25,21 +25,21 @@ export default function PagosSummaryCards({ pagos }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 border-l-4 border-l-green-500">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Total Pagado</p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 truncate">
+      <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 border-l-4 border-l-green-500">
+        <p className="text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wider mb-2">Total Pagado</p>
+        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-neutral-100 truncate">
           ${totalPagos.toLocaleString()}
         </p>
       </div>
-      <div className="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 border-l-4 border-l-blue-500">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Pago Promedio</p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 truncate">
+      <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 border-l-4 border-l-blue-500">
+        <p className="text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wider mb-2">Pago Promedio</p>
+        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-neutral-100 truncate">
           ${promedioPago.toLocaleString()}
         </p>
       </div>
-      <div className="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 border-l-4 border-l-purple-500">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Pagos (Este Mes)</p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">{pagosEsteMes}</p>
+      <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 border-l-4 border-l-purple-500">
+        <p className="text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wider mb-2">Pagos (Este Mes)</p>
+        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-neutral-100">{pagosEsteMes}</p>
       </div>
     </div>
   );
