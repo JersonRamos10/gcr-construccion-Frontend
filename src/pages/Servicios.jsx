@@ -58,6 +58,49 @@ function readPending(id) {
   try { return JSON.parse(sessionStorage.getItem(`abono-servicio-${id}`)); } catch { return null; }
 }
 
+function AbonoModal({ open, servicio, pending, abono, setAbono, busy, error, onSubmit, onClose }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !busy) onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, busy, onClose]);
+
+  if (!open) return null;
+  return <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 sm:items-center sm:p-4" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget && !busy) onClose(); }}>
+    <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-xl dark:bg-neutral-900 sm:rounded-2xl sm:p-6" role="dialog" aria-modal="true" aria-labelledby="abono-modal-title" onMouseDown={event => event.stopPropagation()}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 id="abono-modal-title" className="text-lg font-semibold">Registrar abono</h3>
+          <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">{servicio.tipoServicio} · {servicio.nombre}</p>
+        </div>
+        <button type="button" aria-label="Cerrar" className="rounded-lg p-2 text-xl leading-none text-gray-500 hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800" disabled={busy} onClick={onClose}>×</button>
+      </div>
+      {pending && <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">Hay una confirmación pendiente. Reintenta para recuperar el resultado sin duplicar el pago.</p>}
+      <form onSubmit={onSubmit} className="mt-5 space-y-5">
+        <fieldset disabled={busy || !!pending} className="grid gap-4 sm:grid-cols-3">
+          <Field label="Monto del abono ($)"><input type="number" className={inputClass} min="0.01" max={servicio.saldoPendiente} step="0.01" value={abono.monto} onChange={e => setAbono({ ...abono, monto: e.target.value })} required /></Field>
+          <Field label="Fecha del pago"><input type="date" className={inputClass} min={date(servicio.fechaContratacion)} max={today()} value={abono.fechaPago} onChange={e => setAbono({ ...abono, fechaPago: e.target.value })} required /></Field>
+          <Field label="Referencia o nota (opcional)"><input className={inputClass} maxLength={500} value={abono.referencia} onChange={e => setAbono({ ...abono, referencia: e.target.value })} /></Field>
+        </fieldset>
+        {error && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+        <p className="text-sm text-gray-500 dark:text-neutral-400">Al confirmar se descontará {money(Number(abono.monto) || 0)} del capital disponible.</p>
+        <div className="flex flex-wrap justify-end gap-3">
+          <button type="button" className={secondaryClass} disabled={busy} onClick={onClose}>Cancelar</button>
+          <button className={buttonClass} disabled={busy}>{busy ? "Confirmando..." : pending ? "Reintentar confirmación" : "Confirmar abono"}</button>
+        </div>
+      </form>
+    </div>
+  </div>;
+}
+
 function ServicioDetalle({ servicio, onChange, onBack }) {
   const [editing, setEditing] = useState(false);
   const [pending, setPending] = useState(() => readPending(servicio.id));
@@ -67,6 +110,7 @@ function ServicioDetalle({ servicio, onChange, onBack }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [abonoModalOpen, setAbonoModalOpen] = useState(false);
   const lock = useRef(false);
 
   async function pay(e) {
@@ -81,7 +125,7 @@ function ServicioDetalle({ servicio, onChange, onBack }) {
       const result = await createAbono(servicio.id, payload);
       sessionStorage.removeItem(`abono-servicio-${servicio.id}`);
       setPending(null); setAbono({ monto: "", fechaPago: today(), referencia: "" });
-      onChange(result); setNotice("Abono confirmado. El capital y el saldo ya están actualizados.");
+      onChange(result); setAbonoModalOpen(false); setNotice("Abono confirmado. El capital y el saldo ya están actualizados.");
     } catch (err) {
       if (err.status === 400 || err.status === 404) {
         sessionStorage.removeItem(`abono-servicio-${servicio.id}`); setPending(null);
@@ -110,16 +154,15 @@ function ServicioDetalle({ servicio, onChange, onBack }) {
     </section>
     {notice && <p role="status" className="rounded-lg bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-4">{notice}</p>}
     {error && <p role="alert" className="rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-200 p-4">{error}</p>}
-    {(servicio.saldoPendiente > 0 || pending) && <form className={panelClass} onSubmit={pay}>
-      <h3 className="font-semibold mb-3">Registrar abono</h3>
-      {pending && <p className="text-sm mb-3 text-amber-700 dark:text-amber-300">Hay una confirmación pendiente. Reintenta para recuperar el resultado sin duplicar el pago.</p>}
-      <fieldset disabled={busy || !!pending} className="grid sm:grid-cols-3 gap-4">
-        <Field label="Monto del abono ($)"><input type="number" className={inputClass} min="0.01" max={servicio.saldoPendiente} step="0.01" value={abono.monto} onChange={e => setAbono({ ...abono, monto: e.target.value })} required /></Field>
-        <Field label="Fecha del pago"><input type="date" className={inputClass} min={date(servicio.fechaContratacion)} max={today()} value={abono.fechaPago} onChange={e => setAbono({ ...abono, fechaPago: e.target.value })} required /></Field>
-        <Field label="Referencia o nota (opcional)"><input className={inputClass} maxLength={500} value={abono.referencia} onChange={e => setAbono({ ...abono, referencia: e.target.value })} /></Field>
-      </fieldset>
-      <div className="mt-4 flex flex-wrap justify-between items-center gap-3"><p className="text-sm text-gray-500 dark:text-neutral-400">Al confirmar se descontará {money(Number(abono.monto) || 0)} del capital disponible.</p><button className={buttonClass} disabled={busy}>{busy ? "Confirmando..." : pending ? "Reintentar confirmación" : "Confirmar abono"}</button></div>
-    </form>}
+    {(servicio.saldoPendiente > 0 || pending) && <>
+      <section className={panelClass}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div><h3 className="font-semibold">Registrar abono</h3><p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">Registra un pago parcial y actualiza el saldo del servicio.</p></div>
+          <button type="button" className={buttonClass} disabled={busy} onClick={() => { setError(""); setAbonoModalOpen(true); }}>{pending ? "Reintentar abono" : "Registrar abono"}</button>
+        </div>
+      </section>
+      <AbonoModal open={abonoModalOpen} servicio={servicio} pending={pending} abono={abono} setAbono={setAbono} busy={busy} error={error} onSubmit={pay} onClose={() => setAbonoModalOpen(false)} />
+    </>}
     <section className={panelClass}>
       <h3 className="font-semibold mb-4">Historial de abonos</h3>
       {servicio.abonos.length === 0 ? <p className="text-gray-500 dark:text-neutral-400">Este servicio todavía no tiene abonos.</p> : <div className="overflow-x-auto"><table className="w-full text-sm text-left"><thead className="text-gray-500 dark:text-neutral-400"><tr>{["Fecha / registro", "Monto", "Referencia", "Estado", "Acción"].map(h => <th key={h} className="p-3">{h}</th>)}</tr></thead><tbody>{servicio.abonos.map(a => <tr key={a.id} className="border-t border-gray-200 dark:border-neutral-700"><td className="p-3 whitespace-nowrap">{date(a.fechaPago)}<span className="block text-xs text-gray-500 dark:text-neutral-400">#{a.id} · {timestamp(a.fechaRegistro)}</span></td><td className={`p-3 whitespace-nowrap ${a.anulado ? "line-through text-gray-400" : "font-semibold"}`}>{money(a.monto)}</td><td className="p-3 break-words max-w-xs">{a.referencia || "—"}</td><td className="p-3">{a.anulado ? <><span className="text-red-600 dark:text-red-400">Anulado</span><p className="text-xs mt-1 break-words">{a.motivoAnulacion}</p><p className="text-xs">{timestamp(a.fechaAnulacion)}</p></> : "Vigente"}</td><td className="p-3">{!a.anulado && <button className="text-red-600 dark:text-red-400 underline disabled:opacity-50" disabled={busy || !!pending} onClick={() => { setAnulando(a); setMotivo(""); }}>Anular</button>}</td></tr>)}</tbody></table></div>}
@@ -167,7 +210,17 @@ export default function Servicios() {
           <button className={buttonClass} disabled={loading}>Filtrar</button>
         </form>
         <section className={panelClass}>
-          {loading ? <p role="status">Cargando servicios...</p> : !data?.items.length ? <p className="text-gray-500 dark:text-neutral-400">No hay servicios para mostrar con estos filtros.</p> : <><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr>{["Servicio / contratista", "Trabajo", "Monto acordado", "Abonado", "Pendiente", "Pago", ""].map(h => <th key={h} className="p-3 text-gray-500 dark:text-neutral-400 font-medium">{h}</th>)}</tr></thead><tbody>{data.items.map(s => <tr key={s.id} className="border-t border-gray-200 dark:border-neutral-700"><td className="p-3"><p className="font-medium">{s.tipoServicio}</p><p className="text-gray-500 dark:text-neutral-400">{s.nombre}</p><p className="text-xs text-gray-500 dark:text-neutral-400">{date(s.fechaContratacion)}</p></td><td className="p-3">{s.estado}</td><td className="p-3 whitespace-nowrap">{money(s.montoAcordado)}</td><td className="p-3 whitespace-nowrap">{money(s.totalAbonado)}</td><td className="p-3 font-semibold whitespace-nowrap">{money(s.saldoPendiente)}</td><td className="p-3">{s.estadoPago}</td><td className="p-3"><button className="text-blue-600 dark:text-blue-400 underline whitespace-nowrap" onClick={() => { setSelected(null); setSelectedId(s.id); setError(""); }}>Ver detalle</button></td></tr>)}</tbody></table></div><Pagination paginaActual={data.page} totalPaginas={data.totalPages} totalItems={data.totalItems} pageSize={data.pageSize} onChangePagina={page => apply({ ...query, page })} /></>}
+          {loading ? <p role="status">Cargando servicios...</p> : !data?.items.length ? <p className="text-gray-500 dark:text-neutral-400">No hay servicios para mostrar con estos filtros.</p> : <>
+            <div className="space-y-3 sm:hidden">
+              {data.items.map(s => <article key={s.id} className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
+                <p className="font-medium">{s.tipoServicio}</p>
+                <p className="mt-1 text-gray-500 dark:text-neutral-400">{s.nombre}</p>
+                <button type="button" className="mt-4 w-full rounded-lg border border-blue-600 px-4 py-2.5 font-medium text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20" onClick={() => { setSelected(null); setSelectedId(s.id); setError(""); }}>Ver detalle</button>
+              </article>)}
+            </div>
+            <div className="hidden overflow-x-auto sm:block"><table className="w-full text-left text-sm"><thead><tr>{["Servicio / contratista", "Trabajo", "Monto acordado", "Abonado", "Pendiente", "Pago", ""].map(h => <th key={h} className="p-3 text-gray-500 dark:text-neutral-400 font-medium">{h}</th>)}</tr></thead><tbody>{data.items.map(s => <tr key={s.id} className="border-t border-gray-200 dark:border-neutral-700"><td className="p-3"><p className="font-medium">{s.tipoServicio}</p><p className="text-gray-500 dark:text-neutral-400">{s.nombre}</p><p className="text-xs text-gray-500 dark:text-neutral-400">{date(s.fechaContratacion)}</p></td><td className="p-3">{s.estado}</td><td className="p-3 whitespace-nowrap">{money(s.montoAcordado)}</td><td className="p-3 whitespace-nowrap">{money(s.totalAbonado)}</td><td className="p-3 font-semibold whitespace-nowrap">{money(s.saldoPendiente)}</td><td className="p-3">{s.estadoPago}</td><td className="p-3"><button type="button" className="text-blue-600 dark:text-blue-400 underline whitespace-nowrap" onClick={() => { setSelected(null); setSelectedId(s.id); setError(""); }}>Ver detalle</button></td></tr>)}</tbody></table></div>
+            <Pagination paginaActual={data.page} totalPaginas={data.totalPages} totalItems={data.totalItems} pageSize={data.pageSize} onChangePagina={page => apply({ ...query, page })} />
+          </>}
         </section>
       </>}
   </main></MainLayout>;
