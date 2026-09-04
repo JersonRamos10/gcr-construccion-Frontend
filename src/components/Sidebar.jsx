@@ -49,6 +49,11 @@ export default function Sidebar({ cerrarMenu }) {
           <span>Pagos</span>
         </NavLink>
 
+        <NavLink to="/servicios" className={linkClass} onClick={handleNavClick}>
+          <span className="material-symbols-outlined text-base flex-shrink-0">home_repair_service</span>
+          <span>Servicios</span>
+        </NavLink>
+
         <NavLink to="/empleados" className={linkClass} onClick={handleNavClick}>
           <span className="material-symbols-outlined text-base flex-shrink-0">group</span>
           <span>Empleados</span>

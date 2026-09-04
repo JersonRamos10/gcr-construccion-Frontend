@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:servicios": "vite --mode servicios-local --host 127.0.0.1 --port 5178 --strictPort",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

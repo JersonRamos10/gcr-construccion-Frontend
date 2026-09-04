@@ -19,6 +19,10 @@ export default function Dashboard() {
   };
 
   const cargarResumen = async () => {
+    if (fechaInicio && fechaFin && fechaInicio > fechaFin) {
+      showAlert("error", "La fecha inicial no puede ser posterior a la final");
+      return;
+    }
     try {
       setLoading(true);
       let url = API_URL;
@@ -44,7 +48,7 @@ export default function Dashboard() {
   }, []);
 
   // Cálculos auxiliares para la barra de progreso (Salud Financiera)
-  const totalGastos = (resumen?.totalComprasMaterial || 0) + (resumen?.totalPagosEmpleados || 0);
+  const totalGastos = resumen?.totalGastos ?? ((resumen?.totalComprasMaterial || 0) + (resumen?.totalPagosEmpleados || 0) + (resumen?.totalAbonosServicios || 0));
   const totalIngresos = resumen?.totalIngresos || 0;
   const porcentajeGastado = totalIngresos > 0 ? (totalGastos / totalIngresos) * 100 : 0;
   const porcentajeBarra = Math.min(porcentajeGastado, 100); // Tope visual 100%
@@ -62,6 +66,10 @@ export default function Dashboard() {
           
           {/* Botones de Acción Rápida */}
           <div className="flex flex-col xs:flex-row sm:flex-row flex-wrap gap-3">
+            <Link to="/servicios" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg font-medium">
+                <span className="material-symbols-outlined text-blue-600">home_repair_service</span>
+                Servicios
+            </Link>
             <Link to="/compras" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-200 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-700 hover:border-gray-300 transition-all font-medium w-full sm:w-auto">
                 <span className="material-symbols-outlined text-blue-600">shopping_cart</span>
                 Nueva Compra
@@ -110,6 +118,7 @@ export default function Dashboard() {
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold">
                         ${formatearMoneda(resumen?.capitalDisponible || 0)}
                     </h2>
+                    <p className="text-xs text-blue-100 dark:text-neutral-400 mt-2">Acumulado de todos los movimientos, independiente del filtro de fechas.</p>
                 </div>
                 <div className="bg-white/10 dark:bg-white/5 p-3 rounded-full backdrop-blur-sm">
                     <span className="material-symbols-outlined text-4xl text-white">account_balance_wallet</span>
@@ -126,7 +135,7 @@ export default function Dashboard() {
                 <div className="flex justify-between items-end mb-2">
                     <div>
                         <h3 className="text-gray-900 dark:text-neutral-100 font-semibold">Flujo de Caja</h3>
-                        <p className="text-xs text-gray-500 dark:text-neutral-400">Relación Ingresos vs. Gastos Totales</p>
+                        <p className="text-xs text-gray-500 dark:text-neutral-400">Ingresos y gastos del período seleccionado</p>
                     </div>
                     <span className="text-sm font-bold text-gray-700 dark:text-neutral-300">{porcentajeGastado.toFixed(1)}% Gastado</span>
                 </div>
@@ -150,7 +159,16 @@ export default function Dashboard() {
         )}
 
         {/* 5. GRID DE DETALLES (Tarjetas) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm">
+                <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg"><span className="material-symbols-outlined text-2xl">home_repair_service</span></div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Abonos de servicios</p>
+                </div>
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-neutral-100">${formatearMoneda(resumen?.totalAbonosServicios || 0)}</p>
+                <div className="w-full bg-gray-100 dark:bg-neutral-700 rounded-full h-1.5 mt-3"><div className="bg-purple-500 h-1.5 rounded-full" style={{ width: `${totalGastos > 0 ? ((resumen?.totalAbonosServicios || 0) / totalGastos * 100) : 0}%` }} /></div>
+                <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">Representa el {totalGastos > 0 ? ((resumen?.totalAbonosServicios || 0) / totalGastos * 100).toFixed(0) : 0}% de tus gastos</p>
+            </div>
             
             {/* Ingresos */}
             <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm">
@@ -198,7 +216,7 @@ export default function Dashboard() {
         {/* 6. RESUMEN TEXTUAL (Estilo Ticket/Factura) */}
         {resumen && (
             <div className="bg-gray-50 dark:bg-neutral-800 rounded-xl p-6 border border-gray-200 dark:border-neutral-700 border-dashed">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-neutral-400 mb-4">Detalle del Balance</h3>
+                <h3 className="text-sm font-medium text-gray-500 dark:text-neutral-400 mb-4">Detalle del balance del período</h3>
                 <div className="space-y-3 text-sm">
                     <div className="flex justify-between text-gray-600 dark:text-neutral-300">
                         <span>Ingresos Totales</span>
@@ -213,9 +231,13 @@ export default function Dashboard() {
                         <span className="font-medium text-orange-600">-${formatearMoneda(resumen.totalPagosEmpleados)}</span>
                     </div>
                     <div className="flex justify-between text-base font-bold pt-1">
-                        <span className="text-gray-800 dark:text-neutral-200">Resultado Neto (Ganancia/Pérdida)</span>
-                        <span className={(resumen.totalIngresos - totalGastos) >= 0 ? "text-green-600" : "text-red-600"}>
-                            ${formatearMoneda(resumen.totalIngresos - totalGastos)}
+                        <span className="text-gray-800 dark:text-neutral-200">(-) Abonos de servicios</span>
+                        <span className="text-purple-600">-${formatearMoneda(resumen.totalAbonosServicios || 0)}</span>
+                    </div>
+                    <div className="flex justify-between text-base font-bold pt-1">
+                        <span className="text-gray-800 dark:text-neutral-200">Balance del período</span>
+                        <span className={resumen.balancePeriodo >= 0 ? "text-green-600" : "text-red-600"}>
+                            ${formatearMoneda(resumen.balancePeriodo)}
                         </span>
                     </div>
                 </div>
